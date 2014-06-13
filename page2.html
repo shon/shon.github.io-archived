@@ -1,0 +1,177 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Shekhar Tiwatne’s weblog | Programming, trekking and life">
+        <meta name="viewport" content="width=device-width">
+        <title>Page 2 &mdash; Shekhar’s weblog</title>
+            <link rel="stylesheet" href="_static/normalize.css" type="text/css">
+            <link rel="stylesheet" href="_static/sphinx.css" type="text/css">
+            <link rel="stylesheet" href="_static/main.css" type="text/css">
+            <link rel="stylesheet" href="_static/flat.css" type="text/css">
+            <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+            <link rel="stylesheet" href="_static/font-awesome.min.css" type="text/css">
+        <link rel="shortcut icon" href="_static/tinkerer.ico" /><!-- Load modernizr and JQuery -->
+        <script src="_static/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="_static/plugins.js"></script>
+        <script src="_static/main.js"></script>
+        <link rel="next" title="Older" href="page3.html" /><link rel="prev" title="Newer" href="index.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="rss.html" /><script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.4.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script><script type="text/javascript" src="_static/underscore.js"></script><script type="text/javascript" src="_static/doctools.js"></script><script type="text/javascript" src="_static/disqus.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Scroll to content if on small screen
+            if (screen.width < 480)
+            {
+                $(document).scrollTop(document.getElementsByTagName("article")[0].offsetTop - 44);
+            }
+        });
+    </script></head>
+    <body role="document">
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+      <div id="container"><header role="banner">
+            <hgroup>
+              <h1><a href="index.html">Shekhar’s weblog</a></h1><h2>ɹ ɐ ɥ ʞ ǝ ɥ s</h2></hgroup>
+          </header>
+      <nav role="navigation">
+            <ul><li class="main-nav">
+                  <a href="index.html">Home</a>
+                </li>
+              <li class="main-nav">
+                  <a href="pages/about.html">About</a>
+                </li>
+              </ul>
+          </nav><div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
+            <span>January 13, 2013</span>
+        </div>
+        <h1><a href="2013/01/13/jsonrpc.html">JSON-RPC</a></h1>
+<p><a class="reference external" href="http://json-rpc.org">JSON-RPC</a> protocol has got much less attention than it deserves. It is so elegant and simple. Our experience of working on JSON-RPC was plesant.</p>
+<p>For uninitiated JSON-RPC is lightweight remote procedure call protocol similar to XML-RPC. I find it incredibly useful in building easy to maintain applications.</p>
+<p>We effectively used JSONRPC in our project <a class="reference external" href="http://cowoop.net">Cowoop</a> to make it easy to debug application.</p>
+<p>It is often seen that unless it is an open source application, in the design phase very little attention is paid towards maintainablity of the application. With many no so clearly seperated layers it makes it increasingly difficult to debug. This makes bug fixing painful and no fun process for those who are working on it. And further these in most cases are not the architects who designed the application. Architect is either moved on to design some other project or is working on next release.</p>
+<p>Lets directly jump to example code. So here is my python function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="go">        return a + b</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+<p>Project exposes above function <cite>add</cite> using JSON-RPC. We use <a class="reference external" href="http://flask.pocoo.org">Flask</a> + <a class="reference external" href="http://packages.python.org/jsonrpc2">jsonrpc2</a> to serve JSONRPC over http.</p>
+<p>Let us see how does jquery JSONRPC plugin calls this API.</p>
+<img alt="../../../_images/001.png" src="_images/001.png"/>
+<p>Result</p>
+<img alt="../../../_images/003.png" src="_images/003.png"/>
+<p>jsonrpc function that you see in above screenshot is part of our js client library. Really it is a a few lines wrapper on top of <a class="reference external" href="https://github.com/datagraph/jquery-jsonrpc">jquery jsonrpc plugin</a> function jsonRPC.request()</p>
+<p>Do you think JSONRPC2 is fairly successful in helping create a maintainable application?</p>
+<div class="section" id="challenges">
+<h2>Challenges</h2>
+<div class="section" id="authentication">
+<h3>Authentication</h3>
+<p>There is no word in JSONRPC2 specification about Authentication yet (not a complaint) . But I think it is necessary for further success of JSONRPC. It’s possible to use http auth but not many would prefer it so I see people implementing two type of solutions.</p>
+<div class="section" id="authentication-using-cookies">
+<h4>Authentication | Using cookies</h4>
+<p>Session id is kept in authcookie and sent/validated with every http request.</p>
+</div>
+<div class="section" id="authentication-using-special-parameters-in-rpc-call">
+<h4>Authentication | Using special parameters in rpc call</h4>
+<p>Session id is passed as special parameter in every rpc call. For eg. above add function may be invoked like below</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">_session</span><span class="o">=</span><span class="s">'somesessionid'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="authentication-ideal">
+<h4>Authentication | Ideal</h4>
+</div>
+</div>
+</div>
+
+        <div class="postmeta">
+        <div class="author">
+            <span>Posted by Shekhar</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="tags/python.html">python</a>, <a href="tags/programming.html">programming</a>, <a href="tags/jsonrpc.html">jsonrpc</a>, <a href="tags/design.html">design</a></span>
+        </div>
+        </div><div class="archive_link">
+        <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
+    </div><ul class="related clearfix">
+            <li class="left"> &laquo; <a href="index.html">Newer</a></li>
+            <li class="right"><a href="page3.html">Older</a> &raquo; </li>
+        </ul></article><aside class="sidebar"><section><div class="widget">
+    <h1>Recent Posts</h1>
+    <ul><li>
+            <a href="2013/07/10/visapur.html">Visapur trek | Route</a>
+        </li><li>
+            <a href="2013/01/13/jsonrpc.html">JSON-RPC</a>
+        </li><li>
+            <a href="2012/04/04/choosing_mvvc_library_for_cowspa.html">Choosing MVC(MVVM) library for Cowspa</a>
+        </li><li>
+            <a href="2011/02/04/configuring_your_ubuntu_for_faster_internet_access.html">Configuring your ubuntu for faster internet access</a>
+        </li><li>
+            <a href="2010/11/26/xfce_and_ubuntuone.html">xfce and ubuntuone</a>
+        </li><li>
+            <a href="2010/11/26/reliance_netconnect_broadband_on_linux.html">Reliance Netconnect Broadband+ on Linux</a>
+        </li><li>
+            <a href="2010/11/26/redis_patterns_search.html">Redis patterns | search</a>
+        </li><li>
+            <a href="2010/11/26/all_izz_well.html">All izz well?</a>
+        </li><li>
+            <a href="2009/03/28/unicode.html">Unicode</a>
+        </li><li>
+            <a href="2009/03/15/youtube_flash_videos_to_divx_on_linux.html">Youtube flash videos to DivX (on Linux)</a>
+        </li></ul>
+</div>
+</section><section><div class="widget" id="searchbox" role="search">
+    <h1>Search</h1>
+    <form action="search.html" method="get">
+        <input type="text" name="q" />
+        <button type="submit"><span class="fa fa-search"></span></button>
+    </form>
+</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+
+        <div class="footer-container" role="contentinfo">
+    <footer class="wrapper">&copy; Copyright 2014, Shekhar Tiwatne. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer>
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51914996-1', 'shon.github.io');
+ga('send', 'pageview');
+    </script>
+</div> <!-- footer-container -->
+
+      </div> <!--! end of #container --><script type="text/javascript">    var disqus_shortname = "shon-blog";    disqus_count();</script><!--[if lt IE 7 ]>
+          <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+          <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+        <![endif]-->
+    </body>
+</html>

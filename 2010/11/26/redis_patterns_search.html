@@ -1,0 +1,227 @@
+<!DOCTYPE html><!--[if lt IE 7]>      <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="https://www.facebook.com/2008/fbml" class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Shekhar Tiwatne’s weblog | Programming, trekking and life">
+        <meta name="viewport" content="width=device-width">
+        <title>Redis patterns | search &mdash; Shekhar’s weblog</title>
+            <link rel="stylesheet" href="../../../_static/normalize.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/sphinx.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/main.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/flat.css" type="text/css">
+            <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+            <link rel="stylesheet" href="../../../_static/font-awesome.min.css" type="text/css">
+        <link rel="shortcut icon" href="../../../_static/tinkerer.ico" /><!-- Load modernizr and JQuery -->
+        <script src="../../../_static/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../../../_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="../../../_static/plugins.js"></script>
+        <script src="../../../_static/main.js"></script>
+        <link rel="next" title="All izz well?" href="all_izz_well.html" /><link rel="prev" title="Reliance Netconnect Broadband+ on Linux" href="reliance_netconnect_broadband_on_linux.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="../../../rss.html" /><script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.4.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script><script type="text/javascript" src="../../../_static/underscore.js"></script><script type="text/javascript" src="../../../_static/doctools.js"></script><script type="text/javascript" src="../../../_static/disqus.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Scroll to content if on small screen
+            if (screen.width < 480)
+            {
+                $(document).scrollTop(document.getElementsByTagName("article")[0].offsetTop - 44);
+            }
+        });
+    </script></head>
+    <body role="document">
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+      <div id="container"><header role="banner">
+            <hgroup>
+              <h1><a href="../../../index.html">Shekhar’s weblog</a></h1><h2>ɹ ɐ ɥ ʞ ǝ ɥ s</h2></hgroup>
+          </header>
+      <nav role="navigation">
+            <ul><li class="main-nav">
+                  <a href="../../../index.html">Home</a>
+                </li>
+              <li class="main-nav">
+                  <a href="../../../pages/about.html">About</a>
+                </li>
+              </ul>
+          </nav><div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
+            <span>November 26, 2010</span>
+        </div>
+    <div class="section" id="redis-patterns-search">
+<h1>Redis patterns | search</h1>
+<div class="section" id="problem">
+<h2>Problem</h2>
+<p>You want to implement search against user objects stored in redis using
+Python. Something like querying for all user ids whose username begins
+with &#8220;an&#8221;.</p>
+</div>
+<div class="section" id="solution">
+<h2>Solution</h2>
+<p>Here we have user objects stored in as hashes with &#8220;user:obj:&#8221; as
+prefix.</p>
+<p>For example</p>
+<p>We need some extra data structures to support our search i.e. (search
+user objects where username begins with given phrase. So search for
+<span class="docutils literal"><span class="pre">jo</span></span> should match John, Joe and so on. We will use sorted sets of all
+usernames and will assign every element a score. This score is a float
+and helps us in finding the matching words.</p>
+<p>Some scores for eg.</p>
+<p>So for above four string if we find strings that has score that is =&gt;
+0.097 and &lt; 0.098, we find all strings that begins with &#8216;a&#8217;</p>
+<p>Code</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Search usernames that begins with given phrase</span>
+<span class="c">#</span>
+<span class="c"># usernames: (username1, username2, ..)</span>
+<span class="c"># userscore:&lt;username&gt;: float</span>
+<span class="c"># user:obj: { id: int, username: string }</span>
+
+<span class="n">usernames_zset</span> <span class="o">=</span> <span class="s">&quot;usernames&quot;</span>
+
+<span class="k">def</span> <span class="nf">my_ord</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&quot;</span><span class="si">%03d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_score</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&#39;0.&#39;</span> <span class="o">+</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">my_ord</span><span class="p">,</span><span class="n">s</span><span class="p">)))</span>
+
+<span class="k">def</span> <span class="nf">get_next_score</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="n">s_score</span> <span class="o">=</span> <span class="n">get_score</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">part0</span> <span class="o">=</span> <span class="n">s_score</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">s_score</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">next_c</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">part1</span> <span class="o">=</span> <span class="n">s_score</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">part0</span> <span class="o">+</span> <span class="n">next_c</span> <span class="o">+</span> <span class="n">part1</span>
+
+<span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">score</span><span class="p">):</span>
+    <span class="c"># The User Object</span>
+    <span class="n">uid</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">incr</span><span class="p">(</span><span class="s">&#39;user:idgen&#39;</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s">&#39;user:obj:</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">uid</span><span class="p">,</span> <span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+    <span class="c"># datastructures necessary to implement search</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">zadd</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">add_test_data</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+    <span class="n">test_data</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">,</span> <span class="s">&#39;ab&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;shekhar&#39;</span><span class="p">,</span> <span class="s">&#39;shon&#39;</span><span class="p">,</span> <span class="s">&#39;sh&#39;</span><span class="p">,</span> \
+        <span class="s">&#39;zxcvbnmasdfghjklqwertyuiop0&#39;</span><span class="p">,</span> <span class="s">&#39;zxcvbnmasdfghjklqwertyuiop00&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">username</span> <span class="ow">in</span> <span class="n">test_data</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">get_score</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+        <span class="n">add_user</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">redis</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">Redis</span><span class="p">()</span>
+
+<span class="n">add_test_data</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+
+<span class="c"># conn.zrange(usernames_zset, 0, -1) # Whole set</span>
+<span class="n">a_score</span> <span class="o">=</span> <span class="n">get_score</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">b_score</span> <span class="o">=</span> <span class="n">get_next_score</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&#39;Find all users starting with &quot;a&quot; -&gt; INF&#39;</span>
+<span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">zrangebyscore</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">a_score</span><span class="p">,</span> <span class="s">&#39;INF&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&#39;Find all users starting with &quot;a&quot;&#39;</span>
+<span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">zrangebyscore</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">a_score</span><span class="p">,</span> <span class="n">b_score</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&#39;Find all users starting with &quot;a&quot; limit 2&#39;</span>
+<span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">zrangebyscore</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">a_score</span><span class="p">,</span> <span class="s">&#39;INF&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="discussion">
+<h2>Discussion</h2>
+<p>This to demonstrate simple redis pattern and using it in Python.</p>
+</div>
+<div class="section" id="see-also">
+<h2>See Also</h2>
+<ul class="simple">
+<li><a class="reference external" href="http://code.google.com/p/redis/wiki/ZrangebyscoreCommand">ZrangebyscoreCommand</a></li>
+</ul>
+<p>There are already some good writeups on related topics.</p>
+<ul class="simple">
+<li><a class="reference external" href="http://playnice.ly/blog/2010/05/24/redis-multi-field-searching-and-filtering/">playnicely</a></li>
+<li><a class="reference external" href="http://antirez.com/post/autocomplete-with-redis.html">autocomplete</a></li>
+</ul>
+</div>
+</div>
+
+    <div class="postmeta">
+        <div class="author">
+            <span>Posted by Shekhar</span>
+        </div>
+        
+        <div class="tags">
+            <span>
+                Tags:
+                <a href="../../../tags/python.html">python</a>, <a href="../../../tags/autocomplete.html">autocomplete</a>, <a href="../../../tags/redis.html">redis</a></span>
+        </div>
+        </div><ul class="related clearfix">
+            <li class="left"> &laquo; <a href="reliance_netconnect_broadband_on_linux.html">Reliance Netconnect Broadband+ on Linux</a></li>
+            <li class="right"><a href="all_izz_well.html">All izz well?</a> &raquo; </li>
+        </ul></article><aside class="sidebar"><section><div class="widget">
+    <h1>Recent Posts</h1>
+    <ul><li>
+            <a href="../../../2013/07/10/visapur.html">Visapur trek | Route</a>
+        </li><li>
+            <a href="../../../2013/01/13/jsonrpc.html">JSON-RPC</a>
+        </li><li>
+            <a href="../../../2012/04/04/choosing_mvvc_library_for_cowspa.html">Choosing MVC(MVVM) library for Cowspa</a>
+        </li><li>
+            <a href="../../../2011/02/04/configuring_your_ubuntu_for_faster_internet_access.html">Configuring your ubuntu for faster internet access</a>
+        </li><li>
+            <a href="xfce_and_ubuntuone.html">xfce and ubuntuone</a>
+        </li><li>
+            <a href="reliance_netconnect_broadband_on_linux.html">Reliance Netconnect Broadband+ on Linux</a>
+        </li><li>
+            <a href="#">Redis patterns | search</a>
+        </li><li>
+            <a href="all_izz_well.html">All izz well?</a>
+        </li><li>
+            <a href="../../../2009/03/28/unicode.html">Unicode</a>
+        </li><li>
+            <a href="../../../2009/03/15/youtube_flash_videos_to_divx_on_linux.html">Youtube flash videos to DivX (on Linux)</a>
+        </li></ul>
+</div>
+</section><section><div class="widget" id="searchbox" role="search">
+    <h1>Search</h1>
+    <form action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <button type="submit"><span class="fa fa-search"></span></button>
+    </form>
+</div></section></aside></div> <!-- #main --></div> <!-- #main-container -->
+
+        <div class="footer-container" role="contentinfo">
+    <footer class="wrapper">&copy; Copyright 2014, Shekhar Tiwatne. Powered by <a href="http://www.tinkerer.me/">Tinkerer</a> and <a href="http://sphinx.pocoo.org/">Sphinx</a>.</footer>
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-51914996-1', 'shon.github.io');
+ga('send', 'pageview');
+    </script>
+</div> <!-- footer-container -->
+
+      </div> <!--! end of #container --><script type="text/javascript">    var disqus_shortname = "shon-blog";    disqus_count();</script><!--[if lt IE 7 ]>
+          <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+          <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+        <![endif]-->
+    </body>
+</html>

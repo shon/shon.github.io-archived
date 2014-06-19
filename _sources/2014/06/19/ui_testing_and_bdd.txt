@@ -75,7 +75,10 @@ Create features/steps/everything.py with below code. It essentially imports step
 
 Run
 ---
-We are ready. Simply execute behave and see firefox window executing all tests for you. You should see one test passed and one failed as intended.
+We are ready. Simply execute *behave* and see firefox window executing all tests for you. You should see one test passed and one failed as intended.
+
+::
+    behave
 
 .. image:: images/behave.png
     :width: 1200 px

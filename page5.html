@@ -65,26 +65,50 @@
                 </li>
               </ul>
           </nav><div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
-            <span>November 26, 2010</span>
+            <span>February 04, 2011</span>
         </div>
-        <h1><a href="2010/11/26/xfce_and_ubuntuone.html">xfce and ubuntuone</a></h1>
-<p>I do like Ubuntu Netbook Remix’s UI. However with 10.04 it’s just gone
-so unstable for me.</p>
-<ul class="simple">
-<li>After login when system prompts for keyring secret, UNR environment
-crashes and drops to gnome. I have to relogin if I need UNR env.</li>
-<li>After I removed a few packages it could not just start gnome panel
-causing a great inconvenience. I guess this is due to Evolution
-integration with latest Ubuntu. Mail client I like and use is
-<a class="reference external" href="http://www.mozillamessaging.com/en-US/thunderbird">Thunderbird</a>. I cant switch to Evolution.</li>
-<li>Initially after 10.04 release it was damn slow to respond, so had to
-do some work around to get it to acceptable speed.</li>
-</ul>
-<p>Considering all that I decided to switch to <a class="reference external" href="http://www.xfce.org/about/screenshots">Xfce</a>. It just worked like
-charm. But now I also use (and like :) ) <a class="reference external" href="https://one.ubuntu.com">UbuntuOne</a> service for my
-backup. UbuntuOne is not integrated for XFCE. Also you cant do
-everything from UbuntuOne’s cli.</p>
-<p>For more details you might want to check <a class="reference external" href="https://wiki.ubuntu.com/UbuntuOne/FAQ#How%20do%20I%20add%20my%20computer?">Ubuntu One wiki</a> .</p>
+        <h1><a href="2011/02/04/configuring_your_ubuntu_for_faster_internet_access.html">Configuring your ubuntu for faster internet access</a></h1>
+<p>While there is a lot already written here my quick howto</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo bash
+<span class="c"># apt-get install dnsmasq squid</span>
+<span class="c"># echo "listen-address=127.0.0.1" &gt;&gt; /etc/dnsmasq.conf</span>
+<span class="c"># echo "no-dhcp-interface=" &gt;&gt; /etc/dnsmasq.conf</span>
+<span class="c"># vi /etc/dhcp3/dhclient.conf</span>
+<span class="c"># # ^ uncomment line #prepend domain-name-servers 127.0.0.1;</span>
+<span class="c"># vi /etc/resolv.conf  # Add nameserver 127.0.0.1</span>
+<span class="c"># /etc/init.d/dnsmasq restart</span>
+<span class="c"># vi /etc/squid/squid.conf</span>
+
+http_port 3128
+visible_hostname localhost
+
+acl all src 0.0.0.0/0.0.0.0
+
+cache_effective_user proxy
+cache_effective_group proxy
+
+http_access allow all
+icp_access allow all
+
+positive_dns_ttl 1 month
+negative_dns_ttl 1 minute
+httpd_accel_port 80
+httpd_accel_with_proxy on
+httpd_accel_uses_host_header on
+
+cache_dir ufs /cache 400 16 256
+cache_store_log none
+
+
+<span class="c"># mkdir /cache # I have this dir on reizerfs partition</span>
+<span class="c"># chown proxy.proxy /cache</span>
+
+<span class="c"># /etc/init.d/squid restart</span>
+</pre></div>
+</div>
+<p>Configure your browser to use 127.0.0.1:8080.
+Also read detailed dnsmasq setup article
+<a class="reference external" href="http://ubuntu.wordpress.com/2006/08/02/local-dns-cache-for-faster-browsing">http://ubuntu.wordpress.com/2006/08/02/local-dns-cache-for-faster-browsing/</a></p>
 
         <div class="postmeta">
         <div class="author">
@@ -94,7 +118,7 @@ everything from UbuntuOne’s cli.</p>
         <div class="tags">
             <span>
                 Tags:
-                <a href="tags/ubuntuone.html">ubuntuone</a>, <a href="tags/xfce.html">xfce</a>, <a href="tags/ubuntu.html">ubuntu</a></span>
+                <a href="tags/linux.html">linux</a>, <a href="tags/squid.html">squid</a>, <a href="tags/dnsmasq.html">dnsmasq</a>, <a href="tags/proxy.html">proxy</a></span>
         </div>
         </div><div class="archive_link">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
@@ -104,6 +128,8 @@ everything from UbuntuOne’s cli.</p>
         </ul></article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="2014/06/19/ui_testing_and_bdd.html">UI Testing and BDD</a>
+        </li><li>
             <a href="2013/07/10/visapur.html">Visapur trek | Route</a>
         </li><li>
             <a href="2013/01/13/jsonrpc.html">JSON-RPC</a>
@@ -121,8 +147,6 @@ everything from UbuntuOne’s cli.</p>
             <a href="2010/11/26/all_izz_well.html">All izz well?</a>
         </li><li>
             <a href="2009/03/28/unicode.html">Unicode</a>
-        </li><li>
-            <a href="2009/03/15/youtube_flash_videos_to_divx_on_linux.html">Youtube flash videos to DivX (on Linux)</a>
         </li></ul>
 </div>
 </section><section><div class="widget" id="searchbox" role="search">

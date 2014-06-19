@@ -77,6 +77,10 @@ Run
 ---
 We are ready. Simply execute behave and see firefox window executing all tests for you. You should see one test passed and one failed as intended.
 
+.. image:: images/behave.png
+    :width: 1200 px
+    :scale: 50 %
+    :alt: Bingo!
 
 What next
 ---------

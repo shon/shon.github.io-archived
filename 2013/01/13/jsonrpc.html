@@ -64,12 +64,11 @@
                   <a href="../../../pages/about.html">About</a>
                 </li>
               </ul>
-          </nav><div class="main-container" role="main"><div class="main wrapper clearfix"><article>
-    <div class="timestamp postmeta">
+          </nav><div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
             <span>January 13, 2013</span>
         </div>
     <div class="section" id="json-rpc">
-<h1>JSON-RPC</h1>
+<h1>JSON-RPC<a class="headerlink" href="#json-rpc" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="http://json-rpc.org/">JSON-RPC</a> protocol has got much less attention than it deserves. It is so elegant and simple. Our experience of working on JSON-RPC was plesant.</p>
 <p>For uninitiated JSON-RPC is lightweight remote procedure call protocol similar to XML-RPC. I find it incredibly useful in building easy to maintain applications.</p>
 <p>We effectively used JSONRPC in our project <a class="reference external" href="http://cowoop.net/">Cowoop</a> to make it easy to debug application.</p>
@@ -90,23 +89,23 @@
 <p>jsonrpc function that you see in above screenshot is part of our js client library. Really it is a a few lines wrapper on top of <a class="reference external" href="https://github.com/datagraph/jquery-jsonrpc">jquery jsonrpc plugin</a> function jsonRPC.request()</p>
 <p>Do you think JSONRPC2 is fairly successful in helping create a maintainable application?</p>
 <div class="section" id="challenges">
-<h2>Challenges</h2>
+<h2>Challenges<a class="headerlink" href="#challenges" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="authentication">
-<h3>Authentication</h3>
+<h3>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h3>
 <p>There is no word in JSONRPC2 specification about Authentication yet (not a complaint) . But I think it is necessary for further success of JSONRPC. It&#8217;s possible to use http auth but not many would prefer it so I see people implementing two type of solutions.</p>
 <div class="section" id="authentication-using-cookies">
-<h4>Authentication | Using cookies</h4>
+<h4>Authentication | Using cookies<a class="headerlink" href="#authentication-using-cookies" title="Permalink to this headline">¶</a></h4>
 <p>Session id is kept in authcookie and sent/validated with every http request.</p>
 </div>
 <div class="section" id="authentication-using-special-parameters-in-rpc-call">
-<h4>Authentication | Using special parameters in rpc call</h4>
+<h4>Authentication | Using special parameters in rpc call<a class="headerlink" href="#authentication-using-special-parameters-in-rpc-call" title="Permalink to this headline">¶</a></h4>
 <p>Session id is passed as special parameter in every rpc call. For eg. above add function may be invoked like below</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">_session</span><span class="o">=</span><span class="s">&#39;somesessionid&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="authentication-ideal">
-<h4>Authentication | Ideal</h4>
+<h4>Authentication | Ideal<a class="headerlink" href="#authentication-ideal" title="Permalink to this headline">¶</a></h4>
 </div>
 </div>
 </div>
@@ -122,12 +121,14 @@
                 Tags:
                 <a href="../../../tags/python.html">python</a>, <a href="../../../tags/programming.html">programming</a>, <a href="../../../tags/jsonrpc.html">jsonrpc</a>, <a href="../../../tags/design.html">design</a></span>
         </div>
-        </div>
-    <script type='text/javascript' src='http://ads.qadserve.com/t?id=8beb39d3-c854-4ead-bdc1-77a22d47dff0&size=728x90'></script>
-<ul class="related clearfix">
+        </div><ul class="related clearfix">
             <li class="left"> &laquo; <a href="../../07/10/visapur.html">Visapur trek | Route</a></li>
             <li class="right"><a href="../../../2012/04/04/choosing_mvvc_library_for_cowspa.html">Choosing MVC(MVVM) library for Cowspa</a> &raquo; </li>
-        </ul></article><aside class="sidebar"><section><div class="widget">
+        </ul>
+    <script type='text/javascript' src='http://ads.qadserve.com/t?id=8beb39d3-c854-4ead-bdc1-77a22d47dff0&size=728x90'></script>
+    <hr/>
+    
+</article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
             <a href="../../../2014/06/19/ui_testing_and_bdd.html">UI Testing and BDD</a>

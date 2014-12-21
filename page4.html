@@ -65,40 +65,49 @@
                 </li>
               </ul>
           </nav><div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
-            <span>April 04, 2012</span>
+            <span>January 13, 2013</span>
         </div>
-        <h1><a href="2012/04/04/choosing_mvvc_library_for_cowspa.html">Choosing MVC(MVVM) library for Cowspa<a class="headerlink" href="#choosing-mvc-mvvm-library-for-cowspa" title="Permalink to this headline">¶</a></a></h1>
-<p>In the initial phase of this open source project <a class="reference external" href="https://github.com/Cowoop/cowspa3">cowspa</a> developed by
-<a class="reference external" href="http://cowoop.net">Cowoop</a>, we had chosen knockout.js as important client side component.
-However during the implementation team bowed to the delivery pressure
-and couldn’t get a chance to learn, explore and use knockout or any
-other MVC library. Certainly a mistake! Ultimately we have to paid the
-price of having to maintain really complex pure jquery based bug-prone
-codebase. However at this stage, I decided to rectify this and started
-looking for different client side templating and MVC libraries.
-Essentially the library that binds the templates to data and can
-auto-update as the data changes. I was stunned by choice of
-libraries/frameworks available.
-There are just too many of them. Ones I liked are</p>
-<ul class="simple">
-<li><a class="reference external" href="http://knockoutjs.com">knockout.js</a></li>
-<li><a class="reference external" href="http://angularjs.org">angular.js</a></li>
-<li><a class="reference external" href="http://emberjs.com">Ember.js</a></li>
-<li><a class="reference external" href="http://agilityjs.com">Agility</a></li>
-<li><a class="reference external" href="http://kmalakoff.github.com/knockback">knockback</a></li>
-</ul>
-<p>Ember is perhaps the best one even according to this <a class="reference external" href="http://codebrief.com/2012/01/the-top-10-javascript-mvc-frameworks-reviewed">post</a>. Angular is
-very capable and is sheer magic. And well there are many more like
-excellent backbone.js.
-We finally narrowed down two options: Knockout and Agility.
-Agility, I liked most, mainly because of it’s clear syntax and looked
-like producing very maintainable code. So it was really tempting to go
-for it. But for us at this point of time knockout scored better at
-mainly with it’s project maturity (age). Agility is at 0.1.2 at this
-moment and knockout 2.0.0 and hence knockout enjoys much bigger
-community.</p>
-<p>So while we go ahead now with knockout I will certainly keep an eye on
-agility’s development would love to find an excuse to use it.</p>
+        <h1><a href="2013/01/13/jsonrpc.html">JSON-RPC<a class="headerlink" href="#json-rpc" title="Permalink to this headline">¶</a></a></h1>
+<p><a class="reference external" href="http://json-rpc.org">JSON-RPC</a> protocol has got much less attention than it deserves. It is so elegant and simple. Our experience of working on JSON-RPC was plesant.</p>
+<p>For uninitiated JSON-RPC is lightweight remote procedure call protocol similar to XML-RPC. I find it incredibly useful in building easy to maintain applications.</p>
+<p>We effectively used JSONRPC in our project <a class="reference external" href="http://cowoop.net">Cowoop</a> to make it easy to debug application.</p>
+<p>It is often seen that unless it is an open source application, in the design phase very little attention is paid towards maintainablity of the application. With many no so clearly seperated layers it makes it increasingly difficult to debug. This makes bug fixing painful and no fun process for those who are working on it. And further these in most cases are not the architects who designed the application. Architect is either moved on to design some other project or is working on next release.</p>
+<p>Lets directly jump to example code. So here is my python function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="go">        return a + b</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+<p>Project exposes above function <cite>add</cite> using JSON-RPC. We use <a class="reference external" href="http://flask.pocoo.org">Flask</a> + <a class="reference external" href="http://packages.python.org/jsonrpc2">jsonrpc2</a> to serve JSONRPC over http.</p>
+<p>Let us see how does jquery JSONRPC plugin calls this API.</p>
+<img alt="../../../_images/001.png" src="_images/001.png"/>
+<p>Result</p>
+<img alt="../../../_images/003.png" src="_images/003.png"/>
+<p>jsonrpc function that you see in above screenshot is part of our js client library. Really it is a a few lines wrapper on top of <a class="reference external" href="https://github.com/datagraph/jquery-jsonrpc">jquery jsonrpc plugin</a> function jsonRPC.request()</p>
+<p>Do you think JSONRPC2 is fairly successful in helping create a maintainable application?</p>
+<div class="section" id="challenges">
+<h2>Challenges<a class="headerlink" href="#challenges" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="authentication">
+<h3>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h3>
+<p>There is no word in JSONRPC2 specification about Authentication yet (not a complaint) . But I think it is necessary for further success of JSONRPC. It’s possible to use http auth but not many would prefer it so I see people implementing two type of solutions.</p>
+<div class="section" id="authentication-using-cookies">
+<h4>Authentication | Using cookies<a class="headerlink" href="#authentication-using-cookies" title="Permalink to this headline">¶</a></h4>
+<p>Session id is kept in authcookie and sent/validated with every http request.</p>
+</div>
+<div class="section" id="authentication-using-special-parameters-in-rpc-call">
+<h4>Authentication | Using special parameters in rpc call<a class="headerlink" href="#authentication-using-special-parameters-in-rpc-call" title="Permalink to this headline">¶</a></h4>
+<p>Session id is passed as special parameter in every rpc call. For eg. above add function may be invoked like below</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">_session</span><span class="o">=</span><span class="s">'somesessionid'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="authentication-ideal">
+<h4>Authentication | Ideal<a class="headerlink" href="#authentication-ideal" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+</div>
 
         <div class="postmeta">
         <div class="author">
@@ -108,7 +117,7 @@ agility’s development would love to find an excuse to use it.</p>
         <div class="tags">
             <span>
                 Tags:
-                <a href="tags/javascript.html">javascript</a>, <a href="tags/agility.html">agility</a>, <a href="tags/knockout_js.html">knockout.js</a>, <a href="tags/cowspa.html">cowspa</a>, <a href="tags/cowoop.html">cowoop</a>, <a href="tags/mvc.html">mvc</a></span>
+                <a href="tags/python.html">python</a>, <a href="tags/programming.html">programming</a>, <a href="tags/jsonrpc.html">jsonrpc</a>, <a href="tags/design.html">design</a></span>
         </div>
         </div><div class="archive_link">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
@@ -118,6 +127,8 @@ agility’s development would love to find an excuse to use it.</p>
         </ul></article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="2014/12/21/dns_migration_story.html">DNS Migration story</a>
+        </li><li>
             <a href="2014/06/19/ui_testing_and_bdd.html">UI Testing and BDD</a>
         </li><li>
             <a href="2013/07/10/visapur.html">Visapur trek | Route</a>
@@ -135,8 +146,6 @@ agility’s development would love to find an excuse to use it.</p>
             <a href="2010/11/26/redis_patterns_search.html">Redis patterns | search</a>
         </li><li>
             <a href="2010/11/26/all_izz_well.html">All izz well?</a>
-        </li><li>
-            <a href="2009/03/28/unicode.html">Unicode</a>
         </li></ul>
 </div>
 </section><section><div class="widget" id="searchbox" role="search">

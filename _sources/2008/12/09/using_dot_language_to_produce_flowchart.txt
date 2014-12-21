@@ -5,9 +5,11 @@ Using DOT language to produce Flowchart
 
 better than struggling with the graphical tools.
 
-$ cat test.dot
+.. code-block:: bash
 
-.. ::
+    $ cat test.dot
+
+::
 
     digraph FlowChart {
     
@@ -38,7 +40,12 @@ $ cat test.dot
     which_browser -> ff [label="Right"]
     which_browser -> bye [label="what firefox?"]
     }
-    
-$ dot test.dot -Tpng -o test.png && eog test.png
+
+
+Here is the result.
+
+.. code-block:: bash
+
+    $ dot test.dot -Tpng -o test.png && eog test.png
 
 .. image:: /images/002.png

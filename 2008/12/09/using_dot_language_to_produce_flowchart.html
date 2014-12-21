@@ -70,8 +70,44 @@
     <div class="section" id="using-dot-language-to-produce-flowchart">
 <h1>Using DOT language to produce Flowchart<a class="headerlink" href="#using-dot-language-to-produce-flowchart" title="Permalink to this headline">¶</a></h1>
 <p>better than struggling with the graphical tools.</p>
-<p>$ cat test.dot</p>
-<p>$ dot test.dot -Tpng -o test.png &amp;&amp; eog test.png</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>cat test.dot
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>digraph FlowChart {
+
+ node [
+         fontname = &quot;Bitstream Vera Sans&quot;
+         fontsize = 8
+         shape = &quot;record&quot;
+     ]
+
+ edge [
+         fontname = &quot;Bitstream Vera Sans&quot;
+         fontsize = 8
+         fontcolor = &quot;Red&quot;
+     ]
+
+// all blocks
+greet [label=&quot;Hello, techie&quot;, shape=&quot;oval&quot;]
+which_os [label=&quot;What OS do you use?&quot; shape=&quot;diamond&quot;]
+like_me [label=&quot;Great, me too!&quot;, shape=&quot;oval&quot;]
+which_browser [label=&quot;You must be using firefox&quot;, shape=&quot;diamond&quot;]
+ff [label=&quot;Cool&quot;, shape=&quot;oval&quot;]
+bye [label=&quot;Bye&quot;, shape=&quot;oval&quot;]
+
+// relations
+greet -&gt; which_os
+which_os -&gt; like_me [label=&quot;I use Linux&quot;]
+which_os -&gt; which_browser [label=&quot;I use Windows&quot;]
+which_browser -&gt; ff [label=&quot;Right&quot;]
+which_browser -&gt; bye [label=&quot;what firefox?&quot;]
+}
+</pre></div>
+</div>
+<p>Here is the result.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>dot test.dot -Tpng -o test.png <span class="o">&amp;&amp;</span> eog test.png
+</pre></div>
+</div>
 <img alt="../../../_images/002.png" src="../../../_images/002.png" />
 </div>
 
@@ -91,6 +127,8 @@
         </ul></article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="../../../2014/12/21/dns_migration_story.html">DNS Migration story</a>
+        </li><li>
             <a href="../../../2014/06/19/ui_testing_and_bdd.html">UI Testing and BDD</a>
         </li><li>
             <a href="../../../2013/07/10/visapur.html">Visapur trek | Route</a>
@@ -108,8 +146,6 @@
             <a href="../../../2010/11/26/redis_patterns_search.html">Redis patterns | search</a>
         </li><li>
             <a href="../../../2010/11/26/all_izz_well.html">All izz well?</a>
-        </li><li>
-            <a href="../../../2009/03/28/unicode.html">Unicode</a>
         </li></ul>
 </div>
 </section><section><div class="widget" id="searchbox" role="search">

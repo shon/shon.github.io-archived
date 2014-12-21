@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Shekhar’s weblog</title>
+        <link>http://shon.github.io/</link>
+        <description>ɹ ɐ ɥ ʞ ǝ ɥ s</description>
+        <language>en-us</language>
+        <pubDate>Thu, 19 Jun 2014 00:00:00 +0530</pubDate>
+        
+        <item>
+            <link>http://shon.github.io/2014/06/19/ui_testing_and_bdd.html</link>
+            <guid>http://shon.github.io/2014/06/19/ui_testing_and_bdd.html</guid>
+            <title><![CDATA[UI Testing and BDD]]></title>
+            <description><![CDATA[<h1>UI Testing and BDD</h1>
+<p>Recently I had an opportunity to automate UI testing of the web application we have developed. So I found this excellent UI testing framework <a class="reference external" href="http://splinter.cobrateam.info">Splinter</a>. It being written in Python I was instantly confortable.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># From Splinter's website</span>
+<span class="kn">from</span> <span class="nn">splinter</span> <span class="kn">import</span> <span class="n">Browser</span>
+
+ <span class="k">with</span> <span class="n">Browser</span><span class="p">()</span> <span class="k">as</span> <span class="n">browser</span><span class="p">:</span>
+     <span class="n">url</span> <span class="o">=</span> <span class="s">"http://www.google.com"</span>
+     <span class="n">browser</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+     <span class="n">browser</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s">'q'</span><span class="p">,</span> <span class="s">'splinter python acceptance testing'</span><span class="p">)</span>
+     <span class="n">button</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="s">'btnG'</span><span class="p">)</span>
+     <span class="n">button</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+     <span class="k">if</span> <span class="n">browser</span><span class="o">.</span><span class="n">is_text_present</span><span class="p">(</span><span class="s">'splinter.cobrateam.info'</span><span class="p">):</span>
+         <span class="k">print</span> <span class="s">"Yes, the official website was found!"</span>
+     <span class="k">else</span><span class="p">:</span>
+         <span class="k">print</span> <span class="s">"No, it wasn't found... We need to improve"</span>
+</pre></div>
+</div>
+<p>Ah well sweet. It supports multiple webdrivers including remote. So it’s possible to integrate it with <a class="reference external" href="http://saucelabs.com">saucelabs</a> which makes it possible to test on web browsers which are not on your dev box.</p>
+<p>Also that you have access to live browser session in Python makes it even more pleasant.</p>
+<p>I happened to read on BDD or (Behavior-driven development) and then soon stumbled upon <a class="reference external" href="https://pythonhosted.org/behave">behave</a>. It’s good idea to use it for testing as it provides nice seperation in test cases implementation and test cases. It uses <a class="reference external" href="https://pythonhosted.org/behave/philosophy.html#the-gherkin-language">The Gherkin language</a> to describe testing scenarios.</p>
+<p>Something like below which even non tech person in your team can write</p>
+<div class="highlight-Gherkin"><div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> SEO Test</span>
+
+<span class="nf">    </span><span class="k">Scenario:</span><span class="nf"> Search Google for Splinter</span>
+<span class="k">        When </span><span class="nf">I visit "</span><span class="s">http://google.com</span><span class="nf">"</span>
+<span class="nf">        </span><span class="k">And </span><span class="nf">I fill in "</span><span class="s">q</span><span class="nf">" with "</span><span class="s">Splinter Python</span><span class="nf">"</span>
+<span class="nf">        </span><span class="k">And </span><span class="nf">I press "</span><span class="s">btnG</span><span class="nf">"</span>
+<span class="nf">        </span><span class="k">Then </span><span class="nf">I should see "</span><span class="s">splinter.cobrateam</span><span class="nf">" within </span><span class="s">5</span><span class="nf"> seconds</span>
+
+<span class="nf">    </span><span class="k">Scenario:</span><span class="nf"> Search Google for Shekhar's Blog</span>
+<span class="nf">        </span><span class="c"># would fail</span><span class="nf"/>
+<span class="k">        When </span><span class="nf">I visit "</span><span class="s">http://google.com</span><span class="nf">"</span>
+<span class="nf">        </span><span class="k">And </span><span class="nf">I fill in "</span><span class="s">q</span><span class="nf">" with "</span><span class="s">Shekhar Tiwatne</span><span class="nf">"</span>
+<span class="nf">        </span><span class="k">And </span><span class="nf">I press "</span><span class="s">btnG</span><span class="nf">"</span>
+<span class="nf">        </span><span class="k">Then </span><span class="nf">I should see "</span><span class="s">shon.github.io</span><span class="nf">" within </span><span class="s">5</span><span class="nf"> seconds</span>
+</pre></div>
+</div>
+<div class="section" id="environment-setup">
+<h2>Environment Setup</h2>
+<p>To make things easier</p>
+<div class="highlight-bash"><div class="highlight"><pre>pip install --upgrade splinter behave behaving
+mkdir -p features/steps
+touch features/steps/__init__.py
+wget https://gist.githubusercontent.com/shon/90ac6af750b575cde050/raw/e89262dd5f722dcc1d83d37c011283330c31e9fc/environment.py
+mv environment.py features
+</pre></div>
+</div>
+<p>Create features/steps/everything.py with below code. It essentially imports steps implementation.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">behave</span> <span class="kn">import</span> <span class="n">step</span>
+<span class="kn">from</span> <span class="nn">behaving.web.steps</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">behaving.personas.steps</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run">
+<h2>Run</h2>
+<p>We are ready. Simply execute <em>behave</em> and see firefox window executing all tests for you. You should see one test passed and one failed as intended.</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd>behave</dd>
+</dl>
+<a class="reference internal image-reference" href="http://shon.github.io/_images/behave.png"><img alt="Bingo!" src="http://shon.github.io/_images/behave.png" style="width: 600.0px;"/></a>
+</div>
+<div class="section" id="what-next">
+<h2>What next</h2>
+<p>Read how to implement steps (grammer) <a class="reference external" href="https://pythonhosted.org/behave/tutorial.html">here</a>.</p>
+</div>
+]]></description>
+            <category><![CDATA[ tech ]]></category>
+             <pubDate>Thu, 19 Jun 2014 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2013/07/10/visapur.html</link>
+            <guid>http://shon.github.io/2013/07/10/visapur.html</guid>
+            <title><![CDATA[Visapur trek | Route]]></title>
+            <description><![CDATA[<h1>Visapur trek | Route</h1>
+<p>Visapur is one the twin forts of Lohgad and Visapur near Lonavala. Visapur is less popular than Lohgad but no less beautiful. However route to Visapur is often confuses even the regular trekkers. While we were planning Lohgad trek last month I couldn’t find any route on Internet. So I did track the route.</p>
+<p>I used <a class="reference external" href="https://play.google.com/store/apps/details?id=com.google.android.maps.mytracks&amp;hl=en">My Tracks</a> android application by Google.</p>
+<p>About the route
+Like described at <a class="reference external" href="http://sahyakada.blogspot.in/2008/11/fort-visapur.html">this blog</a>  there are four options to Visapur.  We took the ‘Patan gaon’ option.</p>
+<p>From Pune we boarded 6.30am Mumbai local and reached Malvali at around 7.30am. Our friends coming from Mumbai had to go to Lonavala and then back to Malvali. From Malvali station we crossed the railway tracks and started walking towards Patan gaon. There is a flyover after station where you see Pune Mumbai express highway.</p>
+<p>After a short walk Visapur is visible and then in another hour and half we were at the top.</p>
+<p>Note that the return route is different. That is beacuse while returning we took different route and lost the path but could manage with local villager’s help. I won’t suggest returning that way.</p>
+<p>Here is the <a class="reference external" href="https://maps.google.com/maps?q=docs:%2F%2F0B4pNmoIAuAckQnVGTFlJVEFxQm8&amp;hl=en-US&amp;ll=18.734704,73.489695&amp;spn=0.028855,0.045447&amp;t=m&amp;gl=US&amp;mapclient=embed&amp;z=15">route</a></p>
+]]></description>
+             <pubDate>Wed, 10 Jul 2013 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2013/01/13/jsonrpc.html</link>
+            <guid>http://shon.github.io/2013/01/13/jsonrpc.html</guid>
+            <title><![CDATA[JSON-RPC]]></title>
+            <description><![CDATA[<h1>JSON-RPC</h1>
+<p><a class="reference external" href="http://json-rpc.org">JSON-RPC</a> protocol has got much less attention than it deserves. It is so elegant and simple. Our experience of working on JSON-RPC was plesant.</p>
+<p>For uninitiated JSON-RPC is lightweight remote procedure call protocol similar to XML-RPC. I find it incredibly useful in building easy to maintain applications.</p>
+<p>We effectively used JSONRPC in our project <a class="reference external" href="http://cowoop.net">Cowoop</a> to make it easy to debug application.</p>
+<p>It is often seen that unless it is an open source application, in the design phase very little attention is paid towards maintainablity of the application. With many no so clearly seperated layers it makes it increasingly difficult to debug. This makes bug fixing painful and no fun process for those who are working on it. And further these in most cases are not the architects who designed the application. Architect is either moved on to design some other project or is working on next release.</p>
+<p>Lets directly jump to example code. So here is my python function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="go">        return a + b</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+<p>Project exposes above function <cite>add</cite> using JSON-RPC. We use <a class="reference external" href="http://flask.pocoo.org">Flask</a> + <a class="reference external" href="http://packages.python.org/jsonrpc2">jsonrpc2</a> to serve JSONRPC over http.</p>
+<p>Let us see how does jquery JSONRPC plugin calls this API.</p>
+<img alt="../../../_images/001.png" src="http://shon.github.io/_images/001.png"/>
+<p>Result</p>
+<img alt="../../../_images/003.png" src="http://shon.github.io/_images/003.png"/>
+<p>jsonrpc function that you see in above screenshot is part of our js client library. Really it is a a few lines wrapper on top of <a class="reference external" href="https://github.com/datagraph/jquery-jsonrpc">jquery jsonrpc plugin</a> function jsonRPC.request()</p>
+<p>Do you think JSONRPC2 is fairly successful in helping create a maintainable application?</p>
+<div class="section" id="challenges">
+<h2>Challenges</h2>
+<div class="section" id="authentication">
+<h3>Authentication</h3>
+<p>There is no word in JSONRPC2 specification about Authentication yet (not a complaint) . But I think it is necessary for further success of JSONRPC. It’s possible to use http auth but not many would prefer it so I see people implementing two type of solutions.</p>
+<div class="section" id="authentication-using-cookies">
+<h4>Authentication | Using cookies</h4>
+<p>Session id is kept in authcookie and sent/validated with every http request.</p>
+</div>
+<div class="section" id="authentication-using-special-parameters-in-rpc-call">
+<h4>Authentication | Using special parameters in rpc call</h4>
+<p>Session id is passed as special parameter in every rpc call. For eg. above add function may be invoked like below</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">_session</span><span class="o">=</span><span class="s">'somesessionid'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="authentication-ideal">
+<h4>Authentication | Ideal</h4>
+</div>
+</div>
+</div>
+]]></description>
+             <pubDate>Sun, 13 Jan 2013 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2012/04/04/choosing_mvvc_library_for_cowspa.html</link>
+            <guid>http://shon.github.io/2012/04/04/choosing_mvvc_library_for_cowspa.html</guid>
+            <title><![CDATA[Choosing MVC(MVVM) library for Cowspa]]></title>
+            <description><![CDATA[<h1>Choosing MVC(MVVM) library for Cowspa</h1>
+<p>In the initial phase of this open source project <a class="reference external" href="https://github.com/Cowoop/cowspa3">cowspa</a> developed by
+<a class="reference external" href="http://cowoop.net">Cowoop</a>, we had chosen knockout.js as important client side component.
+However during the implementation team bowed to the delivery pressure
+and couldn’t get a chance to learn, explore and use knockout or any
+other MVC library. Certainly a mistake! Ultimately we have to paid the
+price of having to maintain really complex pure jquery based bug-prone
+codebase. However at this stage, I decided to rectify this and started
+looking for different client side templating and MVC libraries.
+Essentially the library that binds the templates to data and can
+auto-update as the data changes. I was stunned by choice of
+libraries/frameworks available.
+There are just too many of them. Ones I liked are</p>
+<ul class="simple">
+<li><a class="reference external" href="http://knockoutjs.com">knockout.js</a></li>
+<li><a class="reference external" href="http://angularjs.org">angular.js</a></li>
+<li><a class="reference external" href="http://emberjs.com">Ember.js</a></li>
+<li><a class="reference external" href="http://agilityjs.com">Agility</a></li>
+<li><a class="reference external" href="http://kmalakoff.github.com/knockback">knockback</a></li>
+</ul>
+<p>Ember is perhaps the best one even according to this <a class="reference external" href="http://codebrief.com/2012/01/the-top-10-javascript-mvc-frameworks-reviewed">post</a>. Angular is
+very capable and is sheer magic. And well there are many more like
+excellent backbone.js.
+We finally narrowed down two options: Knockout and Agility.
+Agility, I liked most, mainly because of it’s clear syntax and looked
+like producing very maintainable code. So it was really tempting to go
+for it. But for us at this point of time knockout scored better at
+mainly with it’s project maturity (age). Agility is at 0.1.2 at this
+moment and knockout 2.0.0 and hence knockout enjoys much bigger
+community.</p>
+<p>So while we go ahead now with knockout I will certainly keep an eye on
+agility’s development would love to find an excuse to use it.</p>
+]]></description>
+             <pubDate>Wed, 04 Apr 2012 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2011/02/04/configuring_your_ubuntu_for_faster_internet_access.html</link>
+            <guid>http://shon.github.io/2011/02/04/configuring_your_ubuntu_for_faster_internet_access.html</guid>
+            <title><![CDATA[Configuring your ubuntu for faster internet access]]></title>
+            <description><![CDATA[<h1>Configuring your ubuntu for faster internet access</h1>
+<p>While there is a lot already written here my quick howto</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo bash
+<span class="c"># apt-get install dnsmasq squid</span>
+<span class="c"># echo "listen-address=127.0.0.1" &gt;&gt; /etc/dnsmasq.conf</span>
+<span class="c"># echo "no-dhcp-interface=" &gt;&gt; /etc/dnsmasq.conf</span>
+<span class="c"># vi /etc/dhcp3/dhclient.conf</span>
+<span class="c"># # ^ uncomment line #prepend domain-name-servers 127.0.0.1;</span>
+<span class="c"># vi /etc/resolv.conf  # Add nameserver 127.0.0.1</span>
+<span class="c"># /etc/init.d/dnsmasq restart</span>
+<span class="c"># vi /etc/squid/squid.conf</span>
+
+http_port 3128
+visible_hostname localhost
+
+acl all src 0.0.0.0/0.0.0.0
+
+cache_effective_user proxy
+cache_effective_group proxy
+
+http_access allow all
+icp_access allow all
+
+positive_dns_ttl 1 month
+negative_dns_ttl 1 minute
+httpd_accel_port 80
+httpd_accel_with_proxy on
+httpd_accel_uses_host_header on
+
+cache_dir ufs /cache 400 16 256
+cache_store_log none
+
+
+<span class="c"># mkdir /cache # I have this dir on reizerfs partition</span>
+<span class="c"># chown proxy.proxy /cache</span>
+
+<span class="c"># /etc/init.d/squid restart</span>
+</pre></div>
+</div>
+<p>Configure your browser to use 127.0.0.1:8080.
+Also read detailed dnsmasq setup article
+<a class="reference external" href="http://ubuntu.wordpress.com/2006/08/02/local-dns-cache-for-faster-browsing">http://ubuntu.wordpress.com/2006/08/02/local-dns-cache-for-faster-browsing/</a></p>
+]]></description>
+             <pubDate>Fri, 04 Feb 2011 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2010/11/26/xfce_and_ubuntuone.html</link>
+            <guid>http://shon.github.io/2010/11/26/xfce_and_ubuntuone.html</guid>
+            <title><![CDATA[xfce and ubuntuone]]></title>
+            <description><![CDATA[<h1>xfce and ubuntuone</h1>
+<p>I do like Ubuntu Netbook Remix’s UI. However with 10.04 it’s just gone
+so unstable for me.</p>
+<ul class="simple">
+<li>After login when system prompts for keyring secret, UNR environment
+crashes and drops to gnome. I have to relogin if I need UNR env.</li>
+<li>After I removed a few packages it could not just start gnome panel
+causing a great inconvenience. I guess this is due to Evolution
+integration with latest Ubuntu. Mail client I like and use is
+<a class="reference external" href="http://www.mozillamessaging.com/en-US/thunderbird">Thunderbird</a>. I cant switch to Evolution.</li>
+<li>Initially after 10.04 release it was damn slow to respond, so had to
+do some work around to get it to acceptable speed.</li>
+</ul>
+<p>Considering all that I decided to switch to <a class="reference external" href="http://www.xfce.org/about/screenshots">Xfce</a>. It just worked like
+charm. But now I also use (and like :) ) <a class="reference external" href="https://one.ubuntu.com">UbuntuOne</a> service for my
+backup. UbuntuOne is not integrated for XFCE. Also you cant do
+everything from UbuntuOne’s cli.</p>
+<p>For more details you might want to check <a class="reference external" href="https://wiki.ubuntu.com/UbuntuOne/FAQ#How%20do%20I%20add%20my%20computer?">Ubuntu One wiki</a> .</p>
+]]></description>
+             <pubDate>Fri, 26 Nov 2010 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2010/11/26/reliance_netconnect_broadband_on_linux.html</link>
+            <guid>http://shon.github.io/2010/11/26/reliance_netconnect_broadband_on_linux.html</guid>
+            <title><![CDATA[Reliance Netconnect Broadband+ on Linux]]></title>
+            <description><![CDATA[<h1>Reliance Netconnect Broadband+ on Linux</h1>
+<ul class="simple">
+<li>It works. Make sure while purchasing you inform them that you use Linux</li>
+<li>It’s fast and reliable in Pashan, Pune area</li>
+<li>Below config worked for me on Ubuntu 9.10 AND 10.04</li>
+<li>There are Linux drivers on the CD but I could not get it working on Ubuntu 9.10.</li>
+<li>For activation, I had to use Windows :(</li>
+</ul>
+]]></description>
+             <pubDate>Fri, 26 Nov 2010 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2010/11/26/redis_patterns_search.html</link>
+            <guid>http://shon.github.io/2010/11/26/redis_patterns_search.html</guid>
+            <title><![CDATA[Redis patterns | search]]></title>
+            <description><![CDATA[<h1>Redis patterns | search</h1>
+<div class="section" id="problem">
+<h2>Problem</h2>
+<p>You want to implement search against user objects stored in redis using
+Python. Something like querying for all user ids whose username begins
+with “an”.</p>
+</div>
+<div class="section" id="solution">
+<h2>Solution</h2>
+<p>Here we have user objects stored in as hashes with “user:obj:” as
+prefix.</p>
+<p>For example</p>
+<p>We need some extra data structures to support our search i.e. (search
+user objects where username begins with given phrase. So search for
+<span class="docutils literal"><span class="pre">jo</span></span> should match John, Joe and so on. We will use sorted sets of all
+usernames and will assign every element a score. This score is a float
+and helps us in finding the matching words.</p>
+<p>Some scores for eg.</p>
+<p>So for above four string if we find strings that has score that is =&gt;
+0.097 and &lt; 0.098, we find all strings that begins with ‘a’</p>
+<p>Code</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Search usernames that begins with given phrase</span>
+<span class="c">#</span>
+<span class="c"># usernames: (username1, username2, ..)</span>
+<span class="c"># userscore:&lt;username&gt;: float</span>
+<span class="c"># user:obj: { id: int, username: string }</span>
+
+<span class="n">usernames_zset</span> <span class="o">=</span> <span class="s">"usernames"</span>
+
+<span class="k">def</span> <span class="nf">my_ord</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">"</span><span class="si">%03d</span><span class="s">"</span> <span class="o">%</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_score</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">'0.'</span> <span class="o">+</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">my_ord</span><span class="p">,</span><span class="n">s</span><span class="p">)))</span>
+
+<span class="k">def</span> <span class="nf">get_next_score</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="n">s_score</span> <span class="o">=</span> <span class="n">get_score</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">part0</span> <span class="o">=</span> <span class="n">s_score</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">s_score</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">next_c</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">part1</span> <span class="o">=</span> <span class="n">s_score</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">part0</span> <span class="o">+</span> <span class="n">next_c</span> <span class="o">+</span> <span class="n">part1</span>
+
+<span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">score</span><span class="p">):</span>
+    <span class="c"># The User Object</span>
+    <span class="n">uid</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">incr</span><span class="p">(</span><span class="s">'user:idgen'</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s">'user:obj:</span><span class="si">%d</span><span class="s">'</span> <span class="o">%</span> <span class="n">uid</span><span class="p">,</span> <span class="s">'id'</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+    <span class="c"># datastructures necessary to implement search</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">zadd</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">add_test_data</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+    <span class="n">test_data</span> <span class="o">=</span> <span class="p">(</span><span class="s">'abc'</span><span class="p">,</span> <span class="s">'ab'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">,</span> <span class="s">'shekhar'</span><span class="p">,</span> <span class="s">'shon'</span><span class="p">,</span> <span class="s">'sh'</span><span class="p">,</span> \
+        <span class="s">'zxcvbnmasdfghjklqwertyuiop0'</span><span class="p">,</span> <span class="s">'zxcvbnmasdfghjklqwertyuiop00'</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">username</span> <span class="ow">in</span> <span class="n">test_data</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">get_score</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+        <span class="n">add_user</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">redis</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">Redis</span><span class="p">()</span>
+
+<span class="n">add_test_data</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+
+<span class="c"># conn.zrange(usernames_zset, 0, -1) # Whole set</span>
+<span class="n">a_score</span> <span class="o">=</span> <span class="n">get_score</span><span class="p">(</span><span class="s">'a'</span><span class="p">)</span>
+<span class="n">b_score</span> <span class="o">=</span> <span class="n">get_next_score</span><span class="p">(</span><span class="s">'a'</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">'Find all users starting with "a" -&gt; INF'</span>
+<span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">zrangebyscore</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">a_score</span><span class="p">,</span> <span class="s">'INF'</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">'Find all users starting with "a"'</span>
+<span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">zrangebyscore</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">a_score</span><span class="p">,</span> <span class="n">b_score</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">'Find all users starting with "a" limit 2'</span>
+<span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">zrangebyscore</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">a_score</span><span class="p">,</span> <span class="s">'INF'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="discussion">
+<h2>Discussion</h2>
+<p>This to demonstrate simple redis pattern and using it in Python.</p>
+</div>
+<div class="section" id="see-also">
+<h2>See Also</h2>
+<ul class="simple">
+<li><a class="reference external" href="http://code.google.com/p/redis/wiki/ZrangebyscoreCommand">ZrangebyscoreCommand</a></li>
+</ul>
+<p>There are already some good writeups on related topics.</p>
+<ul class="simple">
+<li><a class="reference external" href="http://playnice.ly/blog/2010/05/24/redis-multi-field-searching-and-filtering">playnicely</a></li>
+<li><a class="reference external" href="http://antirez.com/post/autocomplete-with-redis.html">autocomplete</a></li>
+</ul>
+</div>
+]]></description>
+             <pubDate>Fri, 26 Nov 2010 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2010/11/26/all_izz_well.html</link>
+            <guid>http://shon.github.io/2010/11/26/all_izz_well.html</guid>
+            <title><![CDATA[All izz well?]]></title>
+            <description><![CDATA[<h1>All izz well?</h1>
+<p>Surely one of the most over-hyped film. What was good? Aamir, Music and
+the first half laughs. Post interval it becomes a predictable, boring,
+idiot bollywood movie.</p>
+<p>Munnabhai s were certainly better. I would say watch it on TV or atleast
+don’t pay 3 times higher than usual for tickets like we did. 4 and half
+stars by critic hmmmm..</p>
+]]></description>
+             <pubDate>Fri, 26 Nov 2010 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2009/03/28/unicode.html</link>
+            <guid>http://shon.github.io/2009/03/28/unicode.html</guid>
+            <title><![CDATA[Unicode]]></title>
+            <description><![CDATA[<h1>Unicode</h1>
+<p>Pulling your hairs over some i18n bug or you fix it but are not able to
+explain what. This is little help in getting fair idea about
+unicode/codecs/encoding/decoding etc.</p>
+<p>Quick tips:</p>
+<ol class="loweralpha simple">
+<li>It does not make sense to have a string without knowing what encoding it uses.</li>
+<li>Utf-8 is a way of storing string of Unicode code points.</li>
+<li>Encoding: Transforming a unicode object into a sequence of bytes</li>
+<li>Decoding: Recreating the unicode object from the sequence of bytes is known as decoding. There are many different methods for how this transformation can be done (these methods are also called encodings).</li>
+</ol>
+<p>Now</p>
+<p>Must Read</p>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://www.joelonsoftware.com/articles/Unicode.html">http://www.joelonsoftware.com/articles/Unicode.html</a></li>
+<li><a class="reference external" href="http://stackoverflow.com/questions/447107/whats-the-difference-between-encode-decode-python-2-x">http://stackoverflow.com/questions/447107/whats-the-difference-between-encode-decode-python-2-x</a></li>
+</ol>
+<p>Continue reading</p>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://farmdev.com/talks/unicode">http://farmdev.com/talks/unicode/</a></li>
+<li><a class="reference external" href="http://diveintopython.org/xml_processing/unicode.html">http://diveintopython.org/xml_processing/unicode.html</a></li>
+<li><a class="reference external" href="http://stackoverflow.com/questions/440320/unicode-vs-str-decode-for-a-utf8-encoded-byte-string-python-2-x">http://stackoverflow.com/questions/440320/unicode-vs-str-decode-for-a-utf8-encoded-byte-string-python-2-x</a></li>
+</ol>
+]]></description>
+             <pubDate>Sat, 28 Mar 2009 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2009/03/15/youtube_flash_videos_to_divx_on_linux.html</link>
+            <guid>http://shon.github.io/2009/03/15/youtube_flash_videos_to_divx_on_linux.html</guid>
+            <title><![CDATA[Youtube flash videos to DivX (on Linux)]]></title>
+            <description><![CDATA[<h1>Youtube flash videos to DivX (on Linux)</h1>
+<p>This how I convert flash I usually use <a class="reference external" href="https://addons.mozilla.org/en-US/firefox/addon/3006">Firefox VideoHelper Addon</a> to download youtube videos.  To play them on my Philips DVP5986K DVD player from USB drive, I need to convert it to DivX.</p>
+<p><span class="docutils literal"><span class="pre">mencoder</span> <span class="pre">/home/shon/Desktop/file-864260998.flv</span> <span class="pre">-ovc</span> <span class="pre">lavc</span> <span class="pre">-oac</span> <span class="pre">mp3lame</span> <span class="pre">-ffourcc</span> <span class="pre">DX50</span> <span class="pre">-o</span> <span class="pre">out.avi</span></span></p>
+]]></description>
+             <pubDate>Sun, 15 Mar 2009 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2009/03/14/tata_indicom_usb_modem_on_linux.html</link>
+            <guid>http://shon.github.io/2009/03/14/tata_indicom_usb_modem_on_linux.html</guid>
+            <title><![CDATA[Tata Indicom USB Modem on Linux]]></title>
+            <description><![CDATA[<h1>Tata Indicom USB Modem on Linux</h1>
+<p>cat /etc/wvdial.conf:</p>
+<div class="highlight-python"><div class="highlight"><pre>[Dialer Defaults]
+Init1 = ATZ
+Init2 = ATQ0 V1 E1 S0=0 &amp;C1 &amp;D2 +FCLASS=0
+Modem Type = USB Modem
+Baud = 460800
+New PPPD = yes
+Modem = /dev/ttyACM0
+ISDN = 0
+Stupid mode = 1
+Phone = #777
+Password = internet
+Username = internet
+</pre></div>
+</div>
+<p>Don’t understand above. Um ok but I am too lazy to explain.</p>
+]]></description>
+             <pubDate>Sat, 14 Mar 2009 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2009/03/14/linkedin_backlash.html</link>
+            <guid>http://shon.github.io/2009/03/14/linkedin_backlash.html</guid>
+            <title><![CDATA[LinkedIn backlash]]></title>
+            <description><![CDATA[<h1>LinkedIn backlash</h1>
+<p><a class="reference external" href="http://www.linkedin.com">Linkedin</a> is one of the few sites that has certainly impressed me with
+it’s clever design. I would rate it very highly for professional
+networking. It has one very popular feature “recommendations”. Well
+while I am not against recommending or get recommended by, as I have
+done both in past. But I see people who
+think that more and more people they have in their list (no matter how
+they know well each other professionally) and more recommendations they
+have received (mostly by requesting others) would make their prospects
+better. Umm oh, I wonder why are they are madly behind this. I receive a
+quite a few requests often. Some morning you check your emails and you see
+that some colleague in your company 2 years ago sends you a mail with
+subject “can you endorse me?”. And the email says something
+similar.</p>
+<p>Dear ,</p>
+<p>I’m sending this to ask you for a brief recommendation of my work that I
+can include in my LinkedIn profile. If you have any questions, let me
+know.</p>
+<p>Thanks in advance for helping me out.
+-</p>
+<p>Now this above guy could be someone I don’t know that well how well
+he/she is skilled. But now I can’t deny the request so in a day or two I
+would look at some other recommendations available for my other LinkedIn
+friends, copy some matter and send what is requested for. He happily
+accepts and send me a nice Thank you email. I see people who worked
+completely unrelated departments and has probably no ability to judge
+other’s work, go praising out of good relationships. May be what should
+happen on Orkut testimonials or somewhere similar.
+Does these people who have tens and hundreds of people in network and so
+many recommendations have no work other than hopping the jobs and
+sending such requests.</p>
+<p>Next time I interview a guy with many endorsements , I would probably
+more cautious hiring him.</p>
+]]></description>
+             <pubDate>Sat, 14 Mar 2009 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2009/02/17/my_open_source_projects.html</link>
+            <guid>http://shon.github.io/2009/02/17/my_open_source_projects.html</guid>
+            <title><![CDATA[My open source projects]]></title>
+            <description><![CDATA[<h1>My open source projects</h1>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/Cowoop/cowspa3">Cowoop</a>: Open source application to manage coworking business.</li>
+<li><a class="reference external" href="http://pypi.python.org/pypi/httpagentparser">httpagentparser</a>: Python HTTP Agent Parser.</li>
+<li><a class="reference external" href="http://pypi.python.org/pypi/sphc">SPHC</a>: Simple Pythonic HTML Creator.</li>
+<li><a class="reference external" href="http://code.google.com/p/syncer">Syncer</a>: A event daemon based on Pyro.</li>
+<li><a class="reference external" href="http://code.google.com/p/stockie">Stockie</a>: A personal portfolio manager for an Investor</li>
+</ul>
+]]></description>
+             <pubDate>Tue, 17 Feb 2009 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2009/02/16/qemu_networking_setup.html</link>
+            <guid>http://shon.github.io/2009/02/16/qemu_networking_setup.html</guid>
+            <title><![CDATA[Qemu networking setup]]></title>
+            <description><![CDATA[Qemu networking setup]]></description>
+             <pubDate>Mon, 16 Feb 2009 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2008/12/09/using_dot_language_to_produce_flowchart.html</link>
+            <guid>http://shon.github.io/2008/12/09/using_dot_language_to_produce_flowchart.html</guid>
+            <title><![CDATA[Using DOT language to produce Flowchart]]></title>
+            <description><![CDATA[<h1>Using DOT language to produce Flowchart</h1>
+<p>better than struggling with the graphical tools.</p>
+<p>$ cat test.dot</p>
+<p>$ dot test.dot -Tpng -o test.png &amp;&amp; eog test.png</p>
+<img alt="../../../_images/002.png" src="http://shon.github.io/_images/002.png"/>
+]]></description>
+             <pubDate>Tue, 09 Dec 2008 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2008/04/17/getting_older_getting_better_and_better.html</link>
+            <guid>http://shon.github.io/2008/04/17/getting_older_getting_better_and_better.html</guid>
+            <title><![CDATA[Getting older, getting better and better!]]></title>
+            <description><![CDATA[<h1>Getting older, getting better and better!</h1>
+<p>Python programming is joy. I was stuck on python 2.3 at my work for long
+and could not really get chance to explore later versions. Now that I
+got the opportunity doing re-architecture of the product I started
+exploring these. I am more than excited looking at deque, groupby,
+defaultdict and much more ... Also on top of it there exist excellent
+python softwares like <a class="reference external" href="http://twistedmatrix.com">twisted,</a> <a class="reference external" href="http://sqlalchemy.org">sqlalchemy</a>, <a class="reference external" href="http://turbogears.org">turbogears</a> makes it
+even more cool.</p>
+<p>It’s little pity that the language is stll somewhat less recognized than
+others. Or there are more hyped languages exist.</p>
+]]></description>
+             <pubDate>Thu, 17 Apr 2008 00:00:00 +0530</pubDate>
+        </item>
+    
+        <item>
+            <link>http://shon.github.io/2008/04/17/contract_verification_in_python.html</link>
+            <guid>http://shon.github.io/2008/04/17/contract_verification_in_python.html</guid>
+            <title><![CDATA[Contract verification in Python]]></title>
+            <description><![CDATA[<h1>Contract verification in Python</h1>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">zope.interface.verify</span>
+
+<span class="k">class</span> <span class="nc">ITest</span><span class="p">(</span><span class="n">zope</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">Interface</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">arg1</span><span class="p">):</span> <span class="k">pass</span>
+   <span class="k">def</span> <span class="nf">bar</span><span class="p">():</span> <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="n">zope</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">ITest</span><span class="p">)</span>
+   <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Test2</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="n">zope</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">ITest</span><span class="p">)</span>
+   <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">):</span> <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Test3</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="n">zope</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">ITest</span><span class="p">)</span>
+   <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">):</span> <span class="k">pass</span>
+   <span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
+
+<span class="k">for</span> <span class="n">cls</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Test</span><span class="p">,</span> <span class="n">Test2</span><span class="p">,</span> <span class="n">Test3</span><span class="p">):</span>
+   <span class="k">try</span><span class="p">:</span>
+       <span class="k">if</span> <span class="n">zope</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">verify</span><span class="o">.</span><span class="n">verifyClass</span><span class="p">(</span><span class="n">ITest</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span>
+           <span class="k">print</span> <span class="s">"OK: </span><span class="si">%s</span><span class="s"> correctly implements </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">ITest</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+   <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span>
+       <span class="k">print</span> <span class="s">"Error detected with </span><span class="si">%s</span><span class="s">'s implementation: </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+</pre></div>
+</div>
+]]></description>
+             <pubDate>Thu, 17 Apr 2008 00:00:00 +0530</pubDate>
+        </item>
+    
+    </channel>
+</rss>

@@ -65,49 +65,17 @@
                 </li>
               </ul>
           </nav><div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
-            <span>January 13, 2013</span>
+            <span>July 10, 2013</span>
         </div>
-        <h1><a href="2013/01/13/jsonrpc.html">JSON-RPC<a class="headerlink" href="#json-rpc" title="Permalink to this headline">¶</a></a></h1>
-<p><a class="reference external" href="http://json-rpc.org">JSON-RPC</a> protocol has got much less attention than it deserves. It is so elegant and simple. Our experience of working on JSON-RPC was plesant.</p>
-<p>For uninitiated JSON-RPC is lightweight remote procedure call protocol similar to XML-RPC. I find it incredibly useful in building easy to maintain applications.</p>
-<p>We effectively used JSONRPC in our project <a class="reference external" href="http://cowoop.net">Cowoop</a> to make it easy to debug application.</p>
-<p>It is often seen that unless it is an open source application, in the design phase very little attention is paid towards maintainablity of the application. With many no so clearly seperated layers it makes it increasingly difficult to debug. This makes bug fixing painful and no fun process for those who are working on it. And further these in most cases are not the architects who designed the application. Architect is either moved on to design some other project or is working on next release.</p>
-<p>Lets directly jump to example code. So here is my python function.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-<span class="go">        return a + b</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="go">3</span>
-</pre></div>
-</div>
-<p>Project exposes above function <cite>add</cite> using JSON-RPC. We use <a class="reference external" href="http://flask.pocoo.org">Flask</a> + <a class="reference external" href="http://packages.python.org/jsonrpc2">jsonrpc2</a> to serve JSONRPC over http.</p>
-<p>Let us see how does jquery JSONRPC plugin calls this API.</p>
-<img alt="../../../_images/001.png" src="_images/001.png"/>
-<p>Result</p>
-<img alt="../../../_images/003.png" src="_images/003.png"/>
-<p>jsonrpc function that you see in above screenshot is part of our js client library. Really it is a a few lines wrapper on top of <a class="reference external" href="https://github.com/datagraph/jquery-jsonrpc">jquery jsonrpc plugin</a> function jsonRPC.request()</p>
-<p>Do you think JSONRPC2 is fairly successful in helping create a maintainable application?</p>
-<div class="section" id="challenges">
-<h2>Challenges<a class="headerlink" href="#challenges" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="authentication">
-<h3>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h3>
-<p>There is no word in JSONRPC2 specification about Authentication yet (not a complaint) . But I think it is necessary for further success of JSONRPC. It’s possible to use http auth but not many would prefer it so I see people implementing two type of solutions.</p>
-<div class="section" id="authentication-using-cookies">
-<h4>Authentication | Using cookies<a class="headerlink" href="#authentication-using-cookies" title="Permalink to this headline">¶</a></h4>
-<p>Session id is kept in authcookie and sent/validated with every http request.</p>
-</div>
-<div class="section" id="authentication-using-special-parameters-in-rpc-call">
-<h4>Authentication | Using special parameters in rpc call<a class="headerlink" href="#authentication-using-special-parameters-in-rpc-call" title="Permalink to this headline">¶</a></h4>
-<p>Session id is passed as special parameter in every rpc call. For eg. above add function may be invoked like below</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">_session</span><span class="o">=</span><span class="s">'somesessionid'</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="authentication-ideal">
-<h4>Authentication | Ideal<a class="headerlink" href="#authentication-ideal" title="Permalink to this headline">¶</a></h4>
-</div>
-</div>
-</div>
+        <h1><a href="2013/07/10/visapur.html">Visapur trek | Route<a class="headerlink" href="#visapur-trek-route" title="Permalink to this headline">¶</a></a></h1>
+<p>Visapur is one the twin forts of Lohgad and Visapur near Lonavala. Visapur is less popular than Lohgad but no less beautiful. However route to Visapur is often confuses even the regular trekkers. While we were planning Lohgad trek last month I couldn’t find any route on Internet. So I did track the route.</p>
+<p>I used <a class="reference external" href="https://play.google.com/store/apps/details?id=com.google.android.maps.mytracks&amp;hl=en">My Tracks</a> android application by Google.</p>
+<p>About the route
+Like described at <a class="reference external" href="http://sahyakada.blogspot.in/2008/11/fort-visapur.html">this blog</a>  there are four options to Visapur.  We took the ‘Patan gaon’ option.</p>
+<p>From Pune we boarded 6.30am Mumbai local and reached Malvali at around 7.30am. Our friends coming from Mumbai had to go to Lonavala and then back to Malvali. From Malvali station we crossed the railway tracks and started walking towards Patan gaon. There is a flyover after station where you see Pune Mumbai express highway.</p>
+<p>After a short walk Visapur is visible and then in another hour and half we were at the top.</p>
+<p>Note that the return route is different. That is beacuse while returning we took different route and lost the path but could manage with local villager’s help. I won’t suggest returning that way.</p>
+<p>Here is the <a class="reference external" href="https://maps.google.com/maps?q=docs:%2F%2F0B4pNmoIAuAckQnVGTFlJVEFxQm8&amp;hl=en-US&amp;ll=18.734704,73.489695&amp;spn=0.028855,0.045447&amp;t=m&amp;gl=US&amp;mapclient=embed&amp;z=15">route</a></p>
 
         <div class="postmeta">
         <div class="author">
@@ -117,7 +85,7 @@
         <div class="tags">
             <span>
                 Tags:
-                <a href="tags/python.html">python</a>, <a href="tags/programming.html">programming</a>, <a href="tags/jsonrpc.html">jsonrpc</a>, <a href="tags/design.html">design</a></span>
+                <a href="tags/trekking.html">trekking</a>, <a href="tags/travel.html">travel</a></span>
         </div>
         </div><div class="archive_link">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
@@ -127,6 +95,8 @@
         </ul></article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="2014/12/21/dns_migration_story.html">DNS Migration story</a>
+        </li><li>
             <a href="2014/06/19/ui_testing_and_bdd.html">UI Testing and BDD</a>
         </li><li>
             <a href="2013/07/10/visapur.html">Visapur trek | Route</a>
@@ -144,8 +114,6 @@
             <a href="2010/11/26/redis_patterns_search.html">Redis patterns | search</a>
         </li><li>
             <a href="2010/11/26/all_izz_well.html">All izz well?</a>
-        </li><li>
-            <a href="2009/03/28/unicode.html">Unicode</a>
         </li></ul>
 </div>
 </section><section><div class="widget" id="searchbox" role="search">

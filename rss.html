@@ -5,8 +5,58 @@
         <link>http://shon.github.io/</link>
         <description>ɹ ɐ ɥ ʞ ǝ ɥ s</description>
         <language>en-us</language>
-        <pubDate>Thu, 19 Jun 2014 00:00:00 +0530</pubDate>
+        <pubDate>Sun, 21 Dec 2014 00:00:00 +0530</pubDate>
         
+        <item>
+            <link>http://shon.github.io/2014/12/21/dns_migration_story.html</link>
+            <guid>http://shon.github.io/2014/12/21/dns_migration_story.html</guid>
+            <title><![CDATA[DNS Migration story]]></title>
+            <description><![CDATA[<h1>DNS Migration story</h1>
+<p>Sys admin is not my job but then sometimes I need to wear that hat to help the team. Here is how I did it.</p>
+<div class="section" id="get-the-zone-file">
+<h2>Get the Zone file</h2>
+<p>Namecheap support was kind enough to send me zone file when I requested for one.</p>
+</div>
+<div class="section" id="format-the-zone-file">
+<h2>Format the zone file</h2>
+<ul class="simple">
+<li>Remove whitespeces in the beginning of all lines in zone file</li>
+<li>Add below text as first line of zone file</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre>@ORIGIN example.com
+</pre></div>
+</div>
+<p>Install cli53</p>
+<div class="highlight-python"><div class="highlight"><pre>pip install cli53
+</pre></div>
+</div>
+</div>
+<div class="section" id="migration">
+<h2>Migration</h2>
+<div class="highlight-python"><div class="highlight"><pre>cli53 create example.com
+cli53 import example.com --file example.com.zone
+</pre></div>
+</div>
+</div>
+<div class="section" id="verify">
+<h2>Verify</h2>
+<p>Find out your name server. Logon to AWS Route 53 console and find out NS entries. Pick one. In my case it was <em>ns-1261.awsdns-29.org</em></p>
+<div class="highlight-python"><div class="highlight"><pre>pip install \
+    git+http://github.com/joemiller/dns_compare.git#egg=dns_compare
+dns_compare -z example.com --file example.com.zone \
+    --server 8.8.8.8 -t false
+dns_compare -z example.com --file example.com.zone \
+    --server ns-1261.awsdns-29.org
+# -- OR --- use -t to ignore ttl differences
+dns_compare -z example.com --file example.com.zone \
+    --server ns-1261.awsdns-29.org -t false
+</pre></div>
+</div>
+</div>
+]]></description>
+             <pubDate>Sun, 21 Dec 2014 00:00:00 +0530</pubDate>
+        </item>
+    
         <item>
             <link>http://shon.github.io/2014/06/19/ui_testing_and_bdd.html</link>
             <guid>http://shon.github.io/2014/06/19/ui_testing_and_bdd.html</guid>
@@ -533,8 +583,44 @@ more cautious hiring him.</p>
             <title><![CDATA[Using DOT language to produce Flowchart]]></title>
             <description><![CDATA[<h1>Using DOT language to produce Flowchart</h1>
 <p>better than struggling with the graphical tools.</p>
-<p>$ cat test.dot</p>
-<p>$ dot test.dot -Tpng -o test.png &amp;&amp; eog test.png</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>cat test.dot
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>digraph FlowChart {
+
+ node [
+         fontname = "Bitstream Vera Sans"
+         fontsize = 8
+         shape = "record"
+     ]
+
+ edge [
+         fontname = "Bitstream Vera Sans"
+         fontsize = 8
+         fontcolor = "Red"
+     ]
+
+// all blocks
+greet [label="Hello, techie", shape="oval"]
+which_os [label="What OS do you use?" shape="diamond"]
+like_me [label="Great, me too!", shape="oval"]
+which_browser [label="You must be using firefox", shape="diamond"]
+ff [label="Cool", shape="oval"]
+bye [label="Bye", shape="oval"]
+
+// relations
+greet -&gt; which_os
+which_os -&gt; like_me [label="I use Linux"]
+which_os -&gt; which_browser [label="I use Windows"]
+which_browser -&gt; ff [label="Right"]
+which_browser -&gt; bye [label="what firefox?"]
+}
+</pre></div>
+</div>
+<p>Here is the result.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>dot test.dot -Tpng -o test.png <span class="o">&amp;&amp;</span> eog test.png
+</pre></div>
+</div>
 <img alt="../../../_images/002.png" src="http://shon.github.io/_images/002.png"/>
 ]]></description>
              <pubDate>Tue, 09 Dec 2008 00:00:00 +0530</pubDate>

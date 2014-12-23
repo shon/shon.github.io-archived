@@ -31,7 +31,7 @@
         <link rel="next" title="Older" href="page5.html" /><link rel="prev" title="Newer" href="page3.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="rss.html" /><script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.4.2',
+        VERSION:     '1.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -64,13 +64,14 @@
                   <a href="pages/about.html">About</a>
                 </li>
               </ul>
-          </nav><div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
+          </nav><div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
             <span>January 13, 2013</span>
         </div>
-        <h1><a href="2013/01/13/jsonrpc.html">JSON-RPC<a class="headerlink" href="#json-rpc" title="Permalink to this headline">¶</a></a></h1>
-<p><a class="reference external" href="http://json-rpc.org">JSON-RPC</a> protocol has got much less attention than it deserves. It is so elegant and simple. Our experience of working on JSON-RPC was plesant.</p>
+        <div class="section">
+            <h1><a href="2013/01/13/jsonrpc.html">JSON-RPC<a class="headerlink" href="#json-rpc" title="Permalink to this headline">¶</a></a></h1>
+<p><a class="reference external" href="http://json-rpc.org/">JSON-RPC</a> protocol has got much less attention than it deserves. It is so elegant and simple. Our experience of working on JSON-RPC was plesant.</p>
 <p>For uninitiated JSON-RPC is lightweight remote procedure call protocol similar to XML-RPC. I find it incredibly useful in building easy to maintain applications.</p>
-<p>We effectively used JSONRPC in our project <a class="reference external" href="http://cowoop.net">Cowoop</a> to make it easy to debug application.</p>
+<p>We effectively used JSONRPC in our project <a class="reference external" href="http://cowoop.net/">Cowoop</a> to make it easy to debug application.</p>
 <p>It is often seen that unless it is an open source application, in the design phase very little attention is paid towards maintainablity of the application. With many no so clearly seperated layers it makes it increasingly difficult to debug. This makes bug fixing painful and no fun process for those who are working on it. And further these in most cases are not the architects who designed the application. Architect is either moved on to design some other project or is working on next release.</p>
 <p>Lets directly jump to example code. So here is my python function.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
@@ -80,7 +81,7 @@
 <span class="go">3</span>
 </pre></div>
 </div>
-<p>Project exposes above function <cite>add</cite> using JSON-RPC. We use <a class="reference external" href="http://flask.pocoo.org">Flask</a> + <a class="reference external" href="http://packages.python.org/jsonrpc2">jsonrpc2</a> to serve JSONRPC over http.</p>
+<p>Project exposes above function <cite>add</cite> using JSON-RPC. We use <a class="reference external" href="http://flask.pocoo.org/">Flask</a> + <a class="reference external" href="http://packages.python.org/jsonrpc2">jsonrpc2</a> to serve JSONRPC over http.</p>
 <p>Let us see how does jquery JSONRPC plugin calls this API.</p>
 <img alt="../../../_images/001.png" src="_images/001.png"/>
 <p>Result</p>
@@ -109,6 +110,7 @@
 </div>
 </div>
 
+        </div>
         <div class="postmeta">
         <div class="author">
             <span>Posted by Shekhar</span>
@@ -149,7 +151,7 @@
         </li></ul>
 </div>
 </section><section><div class="widget" id="searchbox" role="search">
-    <h1>Search</h1>
+    <h1><a href="#searchbox">Search</a></h1>
     <form action="search.html" method="get">
         <input type="text" name="q" />
         <button type="submit"><span class="fa fa-search"></span></button>

@@ -1,13 +1,13 @@
-DNS Migration story
-===================
+Namecheap to AWS Route53 DNS Migration story
+============================================
 
 .. author:: default
 .. categories:: none
-.. tags:: dns, namecheap, route53, aws
+.. tags:: dns, namecheap, route53, aws, sysadmin
 .. comments::
 
 
-Sys admin is not my job but then sometimes I need to wear that hat to help the team. Here is how I did it.
+System administration is not my job but then sometimes I need to wear that hat to help the team. Here is how I managed DNS migration from Namecheap to AWS Route53.
 
 Get the Zone file
 -----------------
@@ -19,6 +19,7 @@ Format the zone file
 
 - Remove whitespeces in the beginning of all lines in zone file
 - Add below text as first line of zone file
+- Make sure *quote* all TXT record values
 
 :: 
     
@@ -30,8 +31,8 @@ Install cli53
 
     pip install cli53
 
-Migration
---------
+Zone export 
+---------------
 
 ::
 
@@ -57,3 +58,7 @@ Find out your name server. Logon to AWS Route 53 console and find out NS entries
     dns_compare -z example.com --file example.com.zone \
         --server ns-1261.awsdns-29.org -t false
 
+Finally
+-------
+
+Go to namecheap's "Transfer DNS to Webhost" page for your domain. Add new name servers. Save.

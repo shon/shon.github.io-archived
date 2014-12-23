@@ -67,8 +67,8 @@
           </nav><div class="main-container" role="main"><div class="main wrapper clearfix"><article><div class="timestamp postmeta">
             <span>December 21, 2014</span>
         </div>
-        <h1><a href="2014/12/21/dns_migration_story.html">DNS Migration story<a class="headerlink" href="#dns-migration-story" title="Permalink to this headline">¶</a></a></h1>
-<p>Sys admin is not my job but then sometimes I need to wear that hat to help the team. Here is how I did it.</p>
+        <h1><a href="2014/12/21/dns_migration_story.html">Namecheap to AWS Route53 DNS Migration story<a class="headerlink" href="#namecheap-to-aws-route53-dns-migration-story" title="Permalink to this headline">¶</a></a></h1>
+<p>System administration is not my job but then sometimes I need to wear that hat to help the team. Here is how I managed DNS migration from Namecheap to AWS Route53.</p>
 <div class="section" id="get-the-zone-file">
 <h2>Get the Zone file<a class="headerlink" href="#get-the-zone-file" title="Permalink to this headline">¶</a></h2>
 <p>Namecheap support was kind enough to send me zone file when I requested for one.</p>
@@ -78,6 +78,7 @@
 <ul class="simple">
 <li>Remove whitespeces in the beginning of all lines in zone file</li>
 <li>Add below text as first line of zone file</li>
+<li>Make sure <em>quote</em> all TXT record values</li>
 </ul>
 <div class="highlight-python"><div class="highlight"><pre>@ORIGIN example.com
 </pre></div>
@@ -87,8 +88,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="migration">
-<h2>Migration<a class="headerlink" href="#migration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="zone-export">
+<h2>Zone export<a class="headerlink" href="#zone-export" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><div class="highlight"><pre>cli53 create example.com
 cli53 import example.com --file example.com.zone
 </pre></div>
@@ -109,6 +110,10 @@ dns_compare -z example.com --file example.com.zone \
 </pre></div>
 </div>
 </div>
+<div class="section" id="finally">
+<h2>Finally<a class="headerlink" href="#finally" title="Permalink to this headline">¶</a></h2>
+<p>Go to namecheap’s “Transfer DNS to Webhost” page for your domain. Add new name servers. Save.</p>
+</div>
 
         <div class="postmeta">
         <div class="author">
@@ -118,7 +123,7 @@ dns_compare -z example.com --file example.com.zone \
         <div class="tags">
             <span>
                 Tags:
-                <a href="tags/dns.html">dns</a>, <a href="tags/namecheap.html">namecheap</a>, <a href="tags/route53.html">route53</a>, <a href="tags/aws.html">aws</a></span>
+                <a href="tags/dns.html">dns</a>, <a href="tags/namecheap.html">namecheap</a>, <a href="tags/route53.html">route53</a>, <a href="tags/aws.html">aws</a>, <a href="tags/sysadmin.html">sysadmin</a></span>
         </div>
         <div class="comments">
             <a href="http://shon.github.io/2014/12/21/dns_migration_story.html#disqus_thread" data-disqus-identifier="2014/12/21/dns_migration_story">Leave a comment</a>
@@ -130,7 +135,7 @@ dns_compare -z example.com --file example.com.zone \
         </ul></article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
-            <a href="2014/12/21/dns_migration_story.html">DNS Migration story</a>
+            <a href="2014/12/21/dns_migration_story.html">Namecheap to AWS Route53 DNS Migration story</a>
         </li><li>
             <a href="2014/06/19/ui_testing_and_bdd.html">UI Testing and BDD</a>
         </li><li>

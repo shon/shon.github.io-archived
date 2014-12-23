@@ -104,7 +104,7 @@ cli53 import example.com --file example.com.zone
 dns_compare -z example.com --file example.com.zone \
     --server 8.8.8.8 -t false
 dns_compare -z example.com --file example.com.zone \
-    --server ns-1261.awsdns-29.org
+    --server ns-1261.awsdns-29.org # use your aws ns
 # -- OR --- use -t to ignore ttl differences
 dns_compare -z example.com --file example.com.zone \
     --server ns-1261.awsdns-29.org -t false
@@ -113,7 +113,16 @@ dns_compare -z example.com --file example.com.zone \
 </div>
 <div class="section" id="finally">
 <h2>Finally<a class="headerlink" href="#finally" title="Permalink to this headline">¶</a></h2>
-<p>Go to namecheap&#8217;s &#8220;Transfer DNS to Webhost&#8221; page for your domain. Add new name servers. Save.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>Do understand steps below will cause some downtime (number of hours).</strong></p>
+</div>
+<ul class="simple">
+<li>Go to namecheap&#8217;s &#8220;Transfer DNS to Webhost&#8221; page for your domain. Add new name servers. Save.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre>watch dig -t ANY @8.8.8.8 example.com
+</pre></div>
+</div>
 </div>
 </div>
 

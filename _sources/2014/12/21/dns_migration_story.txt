@@ -53,7 +53,7 @@ Find out your name server. Logon to AWS Route 53 console and find out NS entries
     dns_compare -z example.com --file example.com.zone \
         --server 8.8.8.8 -t false
     dns_compare -z example.com --file example.com.zone \
-        --server ns-1261.awsdns-29.org 
+        --server ns-1261.awsdns-29.org # use your aws ns
     # -- OR --- use -t to ignore ttl differences
     dns_compare -z example.com --file example.com.zone \
         --server ns-1261.awsdns-29.org -t false
@@ -61,4 +61,10 @@ Find out your name server. Logon to AWS Route 53 console and find out NS entries
 Finally
 -------
 
-Go to namecheap's "Transfer DNS to Webhost" page for your domain. Add new name servers. Save.
+.. note:: **Do understand steps below will cause some downtime (number of hours).**
+
+- Go to namecheap's "Transfer DNS to Webhost" page for your domain. Add new name servers. Save.
+
+::
+
+    watch dig -t ANY @8.8.8.8 example.com

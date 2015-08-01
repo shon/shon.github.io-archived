@@ -65,26 +65,12 @@
                 </li>
               </ul>
           </nav><div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
-            <span>March 14, 2009</span>
+            <span>March 15, 2009</span>
         </div>
         <div class="section">
-            <h1><a href="2009/03/14/tata_indicom_usb_modem_on_linux.html">Tata Indicom USB Modem on Linux<a class="headerlink" href="#tata-indicom-usb-modem-on-linux" title="Permalink to this headline">¶</a></a></h1>
-<p>cat /etc/wvdial.conf:</p>
-<div class="highlight-python"><div class="highlight"><pre>[Dialer Defaults]
-Init1 = ATZ
-Init2 = ATQ0 V1 E1 S0=0 &amp;C1 &amp;D2 +FCLASS=0
-Modem Type = USB Modem
-Baud = 460800
-New PPPD = yes
-Modem = /dev/ttyACM0
-ISDN = 0
-Stupid mode = 1
-Phone = #777
-Password = internet
-Username = internet
-</pre></div>
-</div>
-<p>Don’t understand above. Um ok but I am too lazy to explain.</p>
+            <h1><a href="2009/03/15/youtube_flash_videos_to_divx_on_linux.html">Youtube flash videos to DivX (on Linux)<a class="headerlink" href="#youtube-flash-videos-to-divx-on-linux" title="Permalink to this headline">¶</a></a></h1>
+<p>This how I convert flash I usually use <a class="reference external" href="https://addons.mozilla.org/en-US/firefox/addon/3006">Firefox VideoHelper Addon</a> to download youtube videos.  To play them on my Philips DVP5986K DVD player from USB drive, I need to convert it to DivX.</p>
+<p><span class="docutils literal"><span class="pre">mencoder</span> <span class="pre">/home/shon/Desktop/file-864260998.flv</span> <span class="pre">-ovc</span> <span class="pre">lavc</span> <span class="pre">-oac</span> <span class="pre">mp3lame</span> <span class="pre">-ffourcc</span> <span class="pre">DX50</span> <span class="pre">-o</span> <span class="pre">out.avi</span></span></p>
 
         </div>
         <div class="postmeta">
@@ -95,7 +81,7 @@ Username = internet
         <div class="tags">
             <span>
                 Tags:
-                <a href="tags/indicom.html">indicom</a>, <a href="tags/modem.html">modem</a>, <a href="tags/linux.html">linux</a>, <a href="tags/tata.html">tata</a>, <a href="tags/usb.html">usb</a></span>
+                <a href="tags/mencoder.html">mencoder</a>, <a href="tags/linux.html">linux</a>, <a href="tags/youtube.html">youtube</a></span>
         </div>
         </div><div class="archive_link">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
@@ -105,6 +91,8 @@ Username = internet
         </ul></article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="2015/08/01/crapbali.html">Crapbali</a>
+        </li><li>
             <a href="2014/12/21/dns_migration_story.html">Namecheap to AWS Route53 DNS Migration story</a>
         </li><li>
             <a href="2014/06/19/ui_testing_and_bdd.html">UI Testing and BDD</a>
@@ -122,8 +110,6 @@ Username = internet
             <a href="2010/11/26/reliance_netconnect_broadband_on_linux.html">Reliance Netconnect Broadband+ on Linux</a>
         </li><li>
             <a href="2010/11/26/redis_patterns_search.html">Redis patterns | search</a>
-        </li><li>
-            <a href="2010/11/26/all_izz_well.html">All izz well?</a>
         </li></ul>
 </div>
 </section><section><div class="widget" id="searchbox" role="search">

@@ -1,6 +1,7 @@
 All izz well?
 #############
 .. author:: Shekhar
+.. categories:: movie-reviews
 .. tags:: 3 idiots, review, movie
 
 Surely one of the most over-hyped film. What was good? Aamir, Music and

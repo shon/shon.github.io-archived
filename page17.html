@@ -65,51 +65,10 @@
                 </li>
               </ul>
           </nav><div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
-            <span>December 09, 2008</span>
+            <span>February 16, 2009</span>
         </div>
         <div class="section">
-            <h1><a href="2008/12/09/using_dot_language_to_produce_flowchart.html">Using DOT language to produce Flowchart<a class="headerlink" href="#using-dot-language-to-produce-flowchart" title="Permalink to this headline">¶</a></a></h1>
-<p>better than struggling with the graphical tools.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>cat test.dot
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre>digraph FlowChart {
-
- node [
-         fontname = "Bitstream Vera Sans"
-         fontsize = 8
-         shape = "record"
-     ]
-
- edge [
-         fontname = "Bitstream Vera Sans"
-         fontsize = 8
-         fontcolor = "Red"
-     ]
-
-// all blocks
-greet [label="Hello, techie", shape="oval"]
-which_os [label="What OS do you use?" shape="diamond"]
-like_me [label="Great, me too!", shape="oval"]
-which_browser [label="You must be using firefox", shape="diamond"]
-ff [label="Cool", shape="oval"]
-bye [label="Bye", shape="oval"]
-
-// relations
-greet -&gt; which_os
-which_os -&gt; like_me [label="I use Linux"]
-which_os -&gt; which_browser [label="I use Windows"]
-which_browser -&gt; ff [label="Right"]
-which_browser -&gt; bye [label="what firefox?"]
-}
-</pre></div>
-</div>
-<p>Here is the result.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>dot test.dot -Tpng -o test.png <span class="o">&amp;&amp;</span> eog test.png
-</pre></div>
-</div>
-<img alt="../../../_images/002.png" src="_images/002.png"/>
-
+            Qemu networking setup<a class="headerlink" href="#qemu-networking-setup" title="Permalink to this headline">¶</a>
         </div>
         <div class="postmeta">
         <div class="author">
@@ -119,7 +78,7 @@ which_browser -&gt; bye [label="what firefox?"]
         <div class="tags">
             <span>
                 Tags:
-                <a href="tags/graphviz.html">graphviz</a>, <a href="tags/dot.html">dot</a>, <a href="tags/flowchart.html">flowchart</a></span>
+                <a href="tags/vde.html">vde</a>, <a href="tags/qemu.html">qemu</a>, <a href="tags/tap.html">tap</a>, <a href="tags/networking.html">networking</a></span>
         </div>
         </div><div class="archive_link">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
@@ -129,6 +88,8 @@ which_browser -&gt; bye [label="what firefox?"]
         </ul></article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="2015/08/01/crapbali.html">Crapbali</a>
+        </li><li>
             <a href="2014/12/21/dns_migration_story.html">Namecheap to AWS Route53 DNS Migration story</a>
         </li><li>
             <a href="2014/06/19/ui_testing_and_bdd.html">UI Testing and BDD</a>
@@ -146,8 +107,6 @@ which_browser -&gt; bye [label="what firefox?"]
             <a href="2010/11/26/reliance_netconnect_broadband_on_linux.html">Reliance Netconnect Broadband+ on Linux</a>
         </li><li>
             <a href="2010/11/26/redis_patterns_search.html">Redis patterns | search</a>
-        </li><li>
-            <a href="2010/11/26/all_izz_well.html">All izz well?</a>
         </li></ul>
 </div>
 </section><section><div class="widget" id="searchbox" role="search">

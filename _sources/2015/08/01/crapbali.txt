@@ -11,7 +11,7 @@ So Friday afternoon we decided to watch Bahubali.
 We are a bunch of geeks who code for living.
 
 .. image:: images/bahubali.jpg
-    :scale: 50 %
+    :width: 50 %
 
 Tickets were a bit expensive but we were really curious, reading with positive reviews all over (five stars and all).  The expectation was watching desi Lord of the rings equivalent. So final argument in favour of watching Bahubali was "if they have sepnd 250cr it's worth spending extra 150 Rs. to watch it". Argument is sily but fine, everyone really wanted to watch it. So we applied 20% discount offer on bookmyshow and booked the tickets.
 

@@ -7,10 +7,13 @@ Crapbali
 .. comments::
 
 
-So Friday afternoon after some we decided to watch Bahubali.
+So Friday afternoon we decided to watch Bahubali.
 We are a bunch of geeks who code for living.
 
-Alright tickets were a bit expensive but we were really curious, reading with positive reviews all over (five stars and all).  The expectation was watching desi Lord of the rings equivalent. So final argument in favour of watching Bahubali was "if they have sepnd 250cr it's worth spending extra 150 Rs. to watch it". Argument is sily but fine, everyone really wanted to watch it. So we applied 20% discount offer on bookmyshow and booked the tickets.
+.. image:: images/bahubali.jpg
+    :scale: 50 %
+
+Tickets were a bit expensive but we were really curious, reading with positive reviews all over (five stars and all).  The expectation was watching desi Lord of the rings equivalent. So final argument in favour of watching Bahubali was "if they have sepnd 250cr it's worth spending extra 150 Rs. to watch it". Argument is sily but fine, everyone really wanted to watch it. So we applied 20% discount offer on bookmyshow and booked the tickets.
 
 We reached in time. And it began. Waterfall scenes were mesmerizing. Initial few minutes we were convinced that Bahubali is no ordinary boy .. he has great powers. Fine. He finds the mask and he decides to reach top. Fine. As he reached top of the waterfall and the love story story begins
 
@@ -22,7 +25,7 @@ Then as we were walking back to office, we stopped at a small hotel and then dis
 
 
 | PD: Arey, me and Pi have a question for you
-| ME: Shoot
+| ME: Ok..
 | Pi: Who was the old lady who carried baby Bahubali through stream
 | ME: Umm.. had same doubt but let me think
 | RR: See Rani maa was not Bahubali's real mother she was Duggubati's mother, right?

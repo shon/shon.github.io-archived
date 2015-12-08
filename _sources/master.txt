@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2015/12/04/android_apps_i_use
    2015/08/01/crapbali
    2014/12/21/dns_migration_story
    2014/06/19/ui_testing_and_bdd

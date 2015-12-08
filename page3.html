@@ -65,75 +65,64 @@
                 </li>
               </ul>
           </nav><div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
-            <span>June 19, 2014</span>
+            <span>December 21, 2014</span>
         </div>
         <div class="section">
-            <h1><a href="2014/06/19/ui_testing_and_bdd.html">UI Testing and BDD<a class="headerlink" href="#ui-testing-and-bdd" title="Permalink to this headline">¶</a></a></h1>
-<p>Recently I had an opportunity to automate UI testing of the web application we have developed. So I found this excellent UI testing framework <a class="reference external" href="http://splinter.cobrateam.info/">Splinter</a>. It being written in Python I was instantly confortable.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># From Splinter's website</span>
-<span class="kn">from</span> <span class="nn">splinter</span> <span class="kn">import</span> <span class="n">Browser</span>
-
- <span class="k">with</span> <span class="n">Browser</span><span class="p">()</span> <span class="k">as</span> <span class="n">browser</span><span class="p">:</span>
-     <span class="n">url</span> <span class="o">=</span> <span class="s">"http://www.google.com"</span>
-     <span class="n">browser</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-     <span class="n">browser</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s">'q'</span><span class="p">,</span> <span class="s">'splinter python acceptance testing'</span><span class="p">)</span>
-     <span class="n">button</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="s">'btnG'</span><span class="p">)</span>
-     <span class="n">button</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
-     <span class="k">if</span> <span class="n">browser</span><span class="o">.</span><span class="n">is_text_present</span><span class="p">(</span><span class="s">'splinter.cobrateam.info'</span><span class="p">):</span>
-         <span class="k">print</span> <span class="s">"Yes, the official website was found!"</span>
-     <span class="k">else</span><span class="p">:</span>
-         <span class="k">print</span> <span class="s">"No, it wasn't found... We need to improve"</span>
+            <h1><a href="2014/12/21/dns_migration_story.html">Namecheap to AWS Route53 DNS Migration story<a class="headerlink" href="#namecheap-to-aws-route53-dns-migration-story" title="Permalink to this headline">¶</a></a></h1>
+<p>System administration is not my job but then sometimes I need to wear that hat to help the team. Here is how I managed DNS migration from Namecheap to AWS Route53.</p>
+<div class="section" id="get-the-zone-file">
+<h2>Get the Zone file<a class="headerlink" href="#get-the-zone-file" title="Permalink to this headline">¶</a></h2>
+<p>Namecheap support was kind enough to send me zone file when I requested for one.</p>
+</div>
+<div class="section" id="format-the-zone-file">
+<h2>Format the zone file<a class="headerlink" href="#format-the-zone-file" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Remove whitespeces in the beginning of all lines in zone file</li>
+<li>Add below text as first line of zone file</li>
+<li>Make sure <em>quote</em> all TXT record values</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre>@ORIGIN example.com
 </pre></div>
 </div>
-<p>Ah well sweet. It supports multiple webdrivers including remote. So it’s possible to integrate it with <a class="reference external" href="http://saucelabs.com">saucelabs</a> which makes it possible to test on web browsers which are not on your dev box.</p>
-<p>Also that you have access to live browser session in Python makes it even more pleasant.</p>
-<p>I happened to read on BDD or (Behavior-driven development) and then soon stumbled upon <a class="reference external" href="https://pythonhosted.org/behave/">behave</a>. It’s good idea to use it for testing as it provides nice seperation in test cases implementation and test cases. It uses <a class="reference external" href="https://pythonhosted.org/behave/philosophy.html#the-gherkin-language">The Gherkin language</a> to describe testing scenarios.</p>
-<p>Something like below which even non tech person in your team can write</p>
-<div class="highlight-Gherkin"><div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> SEO Test</span>
-
-<span class="nf">    </span><span class="k">Scenario:</span><span class="nf"> Search Google for Splinter</span>
-<span class="k">        When </span><span class="nf">I visit "</span><span class="s">http://google.com</span><span class="nf">"</span>
-<span class="nf">        </span><span class="k">And </span><span class="nf">I fill in "</span><span class="s">q</span><span class="nf">" with "</span><span class="s">Splinter Python</span><span class="nf">"</span>
-<span class="nf">        </span><span class="k">And </span><span class="nf">I press "</span><span class="s">btnG</span><span class="nf">"</span>
-<span class="nf">        </span><span class="k">Then </span><span class="nf">I should see "</span><span class="s">splinter.cobrateam</span><span class="nf">" within </span><span class="s">5</span><span class="nf"> seconds</span>
-
-<span class="nf">    </span><span class="k">Scenario:</span><span class="nf"> Search Google for Shekhar's Blog</span>
-<span class="c">        # would fail</span><span class="nf"/>
-<span class="k">        When </span><span class="nf">I visit "</span><span class="s">http://google.com</span><span class="nf">"</span>
-<span class="nf">        </span><span class="k">And </span><span class="nf">I fill in "</span><span class="s">q</span><span class="nf">" with "</span><span class="s">Shekhar Tiwatne</span><span class="nf">"</span>
-<span class="nf">        </span><span class="k">And </span><span class="nf">I press "</span><span class="s">btnG</span><span class="nf">"</span>
-<span class="nf">        </span><span class="k">Then </span><span class="nf">I should see "</span><span class="s">shon.github.io</span><span class="nf">" within </span><span class="s">5</span><span class="nf"> seconds</span>
-</pre></div>
-</div>
-<div class="section" id="environment-setup">
-<h2>Environment Setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">¶</a></h2>
-<p>To make things easier</p>
-<div class="highlight-bash"><div class="highlight"><pre>pip install --upgrade splinter behave behaving
-mkdir -p features/steps
-touch features/steps/__init__.py
-wget https://gist.githubusercontent.com/shon/90ac6af750b575cde050/raw/e89262dd5f722dcc1d83d37c011283330c31e9fc/environment.py
-mv environment.py features
-</pre></div>
-</div>
-<p>Create features/steps/everything.py with below code. It essentially imports steps implementation.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">behave</span> <span class="kn">import</span> <span class="n">step</span>
-<span class="kn">from</span> <span class="nn">behaving.web.steps</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">behaving.personas.steps</span> <span class="kn">import</span> <span class="o">*</span>
+<p>Install cli53</p>
+<div class="highlight-python"><div class="highlight"><pre>pip install cli53
 </pre></div>
 </div>
 </div>
-<div class="section" id="run">
-<h2>Run<a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h2>
-<p>We are ready. Simply execute <em>behave</em> and see firefox window executing all tests for you. You should see one test passed and one failed as intended.</p>
-<dl class="docutils">
-<dt>::</dt>
-<dd>behave</dd>
-</dl>
-<a class="reference internal image-reference" href="_images/behave.png"><img alt="Bingo!" src="_images/behave.png" style="width: 600.0px;"/></a>
+<div class="section" id="zone-export">
+<h2>Zone export<a class="headerlink" href="#zone-export" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre>cli53 create example.com
+cli53 import example.com --file example.com.zone
+</pre></div>
 </div>
-<div class="section" id="what-next">
-<h2>What next<a class="headerlink" href="#what-next" title="Permalink to this headline">¶</a></h2>
-<p>Read how to implement steps (grammer) <a class="reference external" href="https://pythonhosted.org/behave/tutorial.html">here</a>.</p>
+</div>
+<div class="section" id="verify">
+<h2>Verify<a class="headerlink" href="#verify" title="Permalink to this headline">¶</a></h2>
+<p>Find out your name server. Logon to AWS Route 53 console and find out NS entries. Pick one. In my case it was <em>ns-1261.awsdns-29.org</em></p>
+<div class="highlight-python"><div class="highlight"><pre>pip install \
+    git+http://github.com/joemiller/dns_compare.git#egg=dns_compare
+dns_compare -z example.com --file example.com.zone \
+    --server 8.8.8.8 -t false
+dns_compare -z example.com --file example.com.zone \
+    --server ns-1261.awsdns-29.org # use your aws ns
+# -- OR --- use -t to ignore ttl differences
+dns_compare -z example.com --file example.com.zone \
+    --server ns-1261.awsdns-29.org -t false
+</pre></div>
+</div>
+</div>
+<div class="section" id="finally">
+<h2>Finally<a class="headerlink" href="#finally" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>Do understand steps below will cause some downtime (number of hours).</strong></p>
+</div>
+<ul class="simple">
+<li>Go to namecheap’s “Transfer DNS to Webhost” page for your domain. Add new name servers. Save.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre>watch dig -t ANY @8.8.8.8 example.com
+</pre></div>
+</div>
 </div>
 
         </div>
@@ -141,18 +130,14 @@ mv environment.py features
         <div class="author">
             <span>Posted by Shon</span>
         </div>
-        <div class="categories">
-            <span>
-                Filed under:
-                <a href="categories/tech.html">tech</a></span>
-        </div>
+        
         <div class="tags">
             <span>
                 Tags:
-                <a href="tags/python.html">python</a>, <a href="tags/automation.html">automation</a>, <a href="tags/ui_testing.html">ui-testing</a>, <a href="tags/testing.html">testing</a>, <a href="tags/bdd.html">bdd</a></span>
+                <a href="tags/dns.html">dns</a>, <a href="tags/namecheap.html">namecheap</a>, <a href="tags/route53.html">route53</a>, <a href="tags/aws.html">aws</a>, <a href="tags/sysadmin.html">sysadmin</a></span>
         </div>
         <div class="comments">
-            <a href="http://shon.github.io/2014/06/19/ui_testing_and_bdd.html#disqus_thread" data-disqus-identifier="2014/06/19/ui_testing_and_bdd">Leave a comment</a>
+            <a href="http://shon.github.io/2014/12/21/dns_migration_story.html#disqus_thread" data-disqus-identifier="2014/12/21/dns_migration_story">Leave a comment</a>
         </div></div><div class="archive_link">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
     </div><ul class="related clearfix">
@@ -161,6 +146,8 @@ mv environment.py features
         </ul></article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="2015/12/04/android_apps_i_use.html">Android Apps I use</a>
+        </li><li>
             <a href="2015/08/01/crapbali.html">Crapbali</a>
         </li><li>
             <a href="2014/12/21/dns_migration_story.html">Namecheap to AWS Route53 DNS Migration story</a>
@@ -178,8 +165,6 @@ mv environment.py features
             <a href="2010/11/26/xfce_and_ubuntuone.html">xfce and ubuntuone</a>
         </li><li>
             <a href="2010/11/26/reliance_netconnect_broadband_on_linux.html">Reliance Netconnect Broadband+ on Linux</a>
-        </li><li>
-            <a href="2010/11/26/redis_patterns_search.html">Redis patterns | search</a>
         </li></ul>
 </div>
 </section><section><div class="widget" id="searchbox" role="search">

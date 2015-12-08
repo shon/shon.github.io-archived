@@ -65,64 +65,51 @@
                 </li>
               </ul>
           </nav><div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
-            <span>December 21, 2014</span>
+            <span>August 01, 2015</span>
         </div>
         <div class="section">
-            <h1><a href="2014/12/21/dns_migration_story.html">Namecheap to AWS Route53 DNS Migration story<a class="headerlink" href="#namecheap-to-aws-route53-dns-migration-story" title="Permalink to this headline">¶</a></a></h1>
-<p>System administration is not my job but then sometimes I need to wear that hat to help the team. Here is how I managed DNS migration from Namecheap to AWS Route53.</p>
-<div class="section" id="get-the-zone-file">
-<h2>Get the Zone file<a class="headerlink" href="#get-the-zone-file" title="Permalink to this headline">¶</a></h2>
-<p>Namecheap support was kind enough to send me zone file when I requested for one.</p>
+            <h1><a href="2015/08/01/crapbali.html">Crapbali<a class="headerlink" href="#crapbali" title="Permalink to this headline">¶</a></a></h1>
+<p>So Friday afternoon we decided to watch Bahubali.
+We are a bunch of geeks who code for living.</p>
+<a class="reference internal image-reference" href="_images/bahubali.jpg"><img alt="../../../_images/bahubali.jpg" src="_images/bahubali.jpg" style="width: 100%;"/></a>
+<p>Tickets were a bit expensive but we were really curious, reading with positive reviews all over (five stars and all).  The expectation was watching desi Lord of the rings equivalent. So winning argument in favour of watching Bahubali was “if they have sepnd 250cr making it, it should be worth spending extra 150 Rs. to watch it”. Argument is sily but fine, everyone really wanted to watch it. So we applied 20% discount offer on bookmyshow and booked the tickets.</p>
+<p>We reached in time. And it began. Waterfall scenes were mesmerizing. Initial few minutes we were convinced that Bahubali is no ordinary boy .. he has great powers. Fine. He finds the mask and he decides to reach top. Fine. As he reached top of the waterfall and the love story story begins</p>
+<p>Oh man .. from then until the interval it was crap [Crapbali]. Tatoo in flowing water, the heroine leading warriors and then convincing the tribe leader to have Bahubali lead them .. all so unconvincing even with creative freedom. We were looking at each other with the feeling what crap are we watching.</p>
+<p>Alright post interval Bada Bahubali appears and then things were bit more interesting. Battle scene was epic and most of did enjoy it. But it wasn’t without flaws either. How come Rani maa could watch such huge battlefield like she is in some balcony watching a football or a cricket match .. and many more such logical questions.</p>
+<p>Then as we were walking back to office, we stopped at a cafe and then discussions started</p>
+<div class="line-block">
+<div class="line">PD: Arey, me and Pi have a question for you</div>
+<div class="line">ME: Ok..</div>
+<div class="line">Pi: Who was the old lady who carried baby Bahubali through stream</div>
+<div class="line">ME: Umm.. had same question in my mind but let me think</div>
+<div class="line">RR: See Rani maa was not Bahubali’s real mother she was Duggubati’s mother, right?</div>
+<div class="line">ME: You mean Bada Bahubali..</div>
+<div class="line">Pi: What about Devsena</div>
+<div class="line">...</div>
+<div class="line">...</div>
 </div>
-<div class="section" id="format-the-zone-file">
-<h2>Format the zone file<a class="headerlink" href="#format-the-zone-file" title="Permalink to this headline">¶</a></h2>
+<p>Finally we came to some conclusion.</p>
+<p>There were more discussions and debates as we ordered some food. Two things everyone agreed</p>
 <ul class="simple">
-<li>Remove whitespeces in the beginning of all lines in zone file</li>
-<li>Add below text as first line of zone file</li>
-<li>Make sure <em>quote</em> all TXT record values</li>
+<li>First half was utter crap</li>
+<li>Second half was entertaining for sure but with many flaws</li>
 </ul>
-<div class="highlight-python"><div class="highlight"><pre>@ORIGIN example.com
-</pre></div>
+<div class="section" id="best-scene-in-the-movie">
+<h2>Best scene in the movie<a class="headerlink" href="#best-scene-in-the-movie" title="Permalink to this headline">¶</a></h2>
+<p>Kattappa doing <cite>Shahrukh Khan</cite> in a scene where he runs to kill <em>chota</em> Bahubali, changes his mind midway as he running and slides</p>
 </div>
-<p>Install cli53</p>
-<div class="highlight-python"><div class="highlight"><pre>pip install cli53
-</pre></div>
-</div>
-</div>
-<div class="section" id="zone-export">
-<h2>Zone export<a class="headerlink" href="#zone-export" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>cli53 create example.com
-cli53 import example.com --file example.com.zone
-</pre></div>
-</div>
-</div>
-<div class="section" id="verify">
-<h2>Verify<a class="headerlink" href="#verify" title="Permalink to this headline">¶</a></h2>
-<p>Find out your name server. Logon to AWS Route 53 console and find out NS entries. Pick one. In my case it was <em>ns-1261.awsdns-29.org</em></p>
-<div class="highlight-python"><div class="highlight"><pre>pip install \
-    git+http://github.com/joemiller/dns_compare.git#egg=dns_compare
-dns_compare -z example.com --file example.com.zone \
-    --server 8.8.8.8 -t false
-dns_compare -z example.com --file example.com.zone \
-    --server ns-1261.awsdns-29.org # use your aws ns
-# -- OR --- use -t to ignore ttl differences
-dns_compare -z example.com --file example.com.zone \
-    --server ns-1261.awsdns-29.org -t false
-</pre></div>
-</div>
-</div>
-<div class="section" id="finally">
-<h2>Finally<a class="headerlink" href="#finally" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last"><strong>Do understand steps below will cause some downtime (number of hours).</strong></p>
-</div>
-<ul class="simple">
-<li>Go to namecheap’s “Transfer DNS to Webhost” page for your domain. Add new name servers. Save.</li>
-</ul>
-<div class="highlight-python"><div class="highlight"><pre>watch dig -t ANY @8.8.8.8 example.com
-</pre></div>
-</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>They could have done better job with dialogues. I mean</p>
+<blockquote>
+<div><strong>Mera vachan hi shaasan hai</strong></div></blockquote>
+<p>wait .. what?</p>
+<p>Songs are forgettable, not sure why are they even there.</p>
+<p>Good movies stay in it’s acceptable genre limits. For example many Govinda/Jim carry comedy movies do try to be serious. They often do one thing and do it well. Epic/Superhero/Disaster movies has great graphics but most of the times do not try to be stupid love story.</p>
+<p>Bahubali appeared to be intense historical fiction filled with struggle for power, battles, politics. Sure there is place for tender love and human relations provided they are convincing. You can’t turn on stupid mode for an hour long love story and then switch serious mode when second half begins.</p>
+<p>Bahubali is big budget movie so there was no lack of resources to make a great movie. Still you can’t help but get the feeling that the epic battle scene is the <strong>only</strong> (technology) achievement but other than that movie just disappoints on all fronts.</p>
+<p>And if you ask me to rate the movie... well two stars or may be just <strong>one star</strong> .</p>
+<p>Also read <a class="reference external" href="http://wogma.com/movie/bahubali-review/">Wogma’s review</a>.</p>
 </div>
 
         </div>
@@ -130,14 +117,18 @@ dns_compare -z example.com --file example.com.zone \
         <div class="author">
             <span>Posted by Shon</span>
         </div>
-        
+        <div class="categories">
+            <span>
+                Filed under:
+                <a href="categories/movie_reviews.html">movie-reviews</a></span>
+        </div>
         <div class="tags">
             <span>
                 Tags:
-                <a href="tags/dns.html">dns</a>, <a href="tags/namecheap.html">namecheap</a>, <a href="tags/route53.html">route53</a>, <a href="tags/aws.html">aws</a>, <a href="tags/sysadmin.html">sysadmin</a></span>
+                <a href="tags/movies.html">movies</a>, <a href="tags/review.html">review</a>, <a href="tags/bahubali.html">Bahubali</a>, <a href="tags/bollywood.html">bollywood</a></span>
         </div>
         <div class="comments">
-            <a href="http://shon.github.io/2014/12/21/dns_migration_story.html#disqus_thread" data-disqus-identifier="2014/12/21/dns_migration_story">Leave a comment</a>
+            <a href="http://shon.github.io/2015/08/01/crapbali.html#disqus_thread" data-disqus-identifier="2015/08/01/crapbali">Leave a comment</a>
         </div></div><div class="archive_link">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
     </div><ul class="related clearfix">
@@ -146,6 +137,8 @@ dns_compare -z example.com --file example.com.zone \
         </ul></article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="2015/12/04/android_apps_i_use.html">Android Apps I use</a>
+        </li><li>
             <a href="2015/08/01/crapbali.html">Crapbali</a>
         </li><li>
             <a href="2014/12/21/dns_migration_story.html">Namecheap to AWS Route53 DNS Migration story</a>
@@ -163,8 +156,6 @@ dns_compare -z example.com --file example.com.zone \
             <a href="2010/11/26/xfce_and_ubuntuone.html">xfce and ubuntuone</a>
         </li><li>
             <a href="2010/11/26/reliance_netconnect_broadband_on_linux.html">Reliance Netconnect Broadband+ on Linux</a>
-        </li><li>
-            <a href="2010/11/26/redis_patterns_search.html">Redis patterns | search</a>
         </li></ul>
 </div>
 </section><section><div class="widget" id="searchbox" role="search">

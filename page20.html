@@ -28,7 +28,7 @@
         <script>window.jQuery || document.write('<script src="_static/vendor/jquery-1.8.2.min.js"><\/script>')</script>
         <script src="_static/plugins.js"></script>
         <script src="_static/main.js"></script>
-        <link rel="prev" title="Newer" href="page19.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="rss.html" /><script type="text/javascript">
+        <link rel="next" title="Older" href="page21.html" /><link rel="prev" title="Newer" href="page19.html" /><link rel="alternate" type="application/rss+xml" title="RSS" href="rss.html" /><script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
         VERSION:     '1.5',
@@ -68,34 +68,16 @@
             <span>April 17, 2008</span>
         </div>
         <div class="section">
-            <h1><a href="2008/04/17/contract_verification_in_python.html">Contract verification in Python<a class="headerlink" href="#contract-verification-in-python" title="Permalink to this headline">¶</a></a></h1>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">zope.interface.verify</span>
-
-<span class="k">class</span> <span class="nc">ITest</span><span class="p">(</span><span class="n">zope</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">Interface</span><span class="p">):</span>
-   <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">arg1</span><span class="p">):</span> <span class="k">pass</span>
-   <span class="k">def</span> <span class="nf">bar</span><span class="p">():</span> <span class="k">pass</span>
-
-<span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-   <span class="n">zope</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">ITest</span><span class="p">)</span>
-   <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
-
-<span class="k">class</span> <span class="nc">Test2</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-   <span class="n">zope</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">ITest</span><span class="p">)</span>
-   <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">):</span> <span class="k">pass</span>
-
-<span class="k">class</span> <span class="nc">Test3</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-   <span class="n">zope</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">ITest</span><span class="p">)</span>
-   <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">):</span> <span class="k">pass</span>
-   <span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
-
-<span class="k">for</span> <span class="n">cls</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Test</span><span class="p">,</span> <span class="n">Test2</span><span class="p">,</span> <span class="n">Test3</span><span class="p">):</span>
-   <span class="k">try</span><span class="p">:</span>
-       <span class="k">if</span> <span class="n">zope</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">verify</span><span class="o">.</span><span class="n">verifyClass</span><span class="p">(</span><span class="n">ITest</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span>
-           <span class="k">print</span> <span class="s">"OK: </span><span class="si">%s</span><span class="s"> correctly implements </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">ITest</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
-   <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span>
-       <span class="k">print</span> <span class="s">"Error detected with </span><span class="si">%s</span><span class="s">'s implementation: </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
-</pre></div>
-</div>
+            <h1><a href="2008/04/17/getting_older_getting_better_and_better.html">Getting older, getting better and better!<a class="headerlink" href="#getting-older-getting-better-and-better" title="Permalink to this headline">¶</a></a></h1>
+<p>Python programming is joy. I was stuck on python 2.3 at my work for long
+and could not really get chance to explore later versions. Now that I
+got the opportunity doing re-architecture of the product I started
+exploring these. I am more than excited looking at deque, groupby,
+defaultdict and much more ... Also on top of it there exist excellent
+python softwares like <a class="reference external" href="http://twistedmatrix.com">twisted,</a> <a class="reference external" href="http://sqlalchemy.org">sqlalchemy</a>, <a class="reference external" href="http://turbogears.org">turbogears</a> makes it
+even more cool.</p>
+<p>It’s little pity that the language is stll somewhat less recognized than
+others. Or there are more hyped languages exist.</p>
 
         </div>
         <div class="postmeta">
@@ -106,16 +88,18 @@
         <div class="tags">
             <span>
                 Tags:
-                <a href="tags/python.html">python</a>, <a href="tags/programming.html">programming</a>, <a href="tags/zope.html">zope</a>, <a href="tags/zinterfaces.html">zinterfaces</a></span>
+                <a href="tags/python.html">python</a>, <a href="tags/programming.html">programming</a></span>
         </div>
         </div><div class="archive_link">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
     </div><ul class="related clearfix">
             <li class="left"> &laquo; <a href="page19.html">Newer</a></li>
-            <li class="right"></li>
+            <li class="right"><a href="page21.html">Older</a> &raquo; </li>
         </ul></article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="2015/12/04/android_apps_i_use.html">Android Apps I use</a>
+        </li><li>
             <a href="2015/08/01/crapbali.html">Crapbali</a>
         </li><li>
             <a href="2014/12/21/dns_migration_story.html">Namecheap to AWS Route53 DNS Migration story</a>
@@ -133,8 +117,6 @@
             <a href="2010/11/26/xfce_and_ubuntuone.html">xfce and ubuntuone</a>
         </li><li>
             <a href="2010/11/26/reliance_netconnect_broadband_on_linux.html">Reliance Netconnect Broadband+ on Linux</a>
-        </li><li>
-            <a href="2010/11/26/redis_patterns_search.html">Redis patterns | search</a>
         </li></ul>
 </div>
 </section><section><div class="widget" id="searchbox" role="search">

@@ -65,12 +65,32 @@
                 </li>
               </ul>
           </nav><div class="main-container" role="main"><div class="main wrapper body clearfix"><article><div class="timestamp postmeta">
-            <span>March 15, 2009</span>
+            <span>March 28, 2009</span>
         </div>
         <div class="section">
-            <h1><a href="2009/03/15/youtube_flash_videos_to_divx_on_linux.html">Youtube flash videos to DivX (on Linux)<a class="headerlink" href="#youtube-flash-videos-to-divx-on-linux" title="Permalink to this headline">¶</a></a></h1>
-<p>This how I convert flash I usually use <a class="reference external" href="https://addons.mozilla.org/en-US/firefox/addon/3006">Firefox VideoHelper Addon</a> to download youtube videos.  To play them on my Philips DVP5986K DVD player from USB drive, I need to convert it to DivX.</p>
-<p><span class="docutils literal"><span class="pre">mencoder</span> <span class="pre">/home/shon/Desktop/file-864260998.flv</span> <span class="pre">-ovc</span> <span class="pre">lavc</span> <span class="pre">-oac</span> <span class="pre">mp3lame</span> <span class="pre">-ffourcc</span> <span class="pre">DX50</span> <span class="pre">-o</span> <span class="pre">out.avi</span></span></p>
+            <h1><a href="2009/03/28/unicode.html">Unicode<a class="headerlink" href="#unicode" title="Permalink to this headline">¶</a></a></h1>
+<p>Pulling your hairs over some i18n bug or you fix it but are not able to
+explain what. This is little help in getting fair idea about
+unicode/codecs/encoding/decoding etc.</p>
+<p>Quick tips:</p>
+<ol class="loweralpha simple">
+<li>It does not make sense to have a string without knowing what encoding it uses.</li>
+<li>Utf-8 is a way of storing string of Unicode code points.</li>
+<li>Encoding: Transforming a unicode object into a sequence of bytes</li>
+<li>Decoding: Recreating the unicode object from the sequence of bytes is known as decoding. There are many different methods for how this transformation can be done (these methods are also called encodings).</li>
+</ol>
+<p>Now</p>
+<p>Must Read</p>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://www.joelonsoftware.com/articles/Unicode.html">http://www.joelonsoftware.com/articles/Unicode.html</a></li>
+<li><a class="reference external" href="http://stackoverflow.com/questions/447107/whats-the-difference-between-encode-decode-python-2-x">http://stackoverflow.com/questions/447107/whats-the-difference-between-encode-decode-python-2-x</a></li>
+</ol>
+<p>Continue reading</p>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://farmdev.com/talks/unicode/">http://farmdev.com/talks/unicode/</a></li>
+<li><a class="reference external" href="http://diveintopython.org/xml_processing/unicode.html">http://diveintopython.org/xml_processing/unicode.html</a></li>
+<li><a class="reference external" href="http://stackoverflow.com/questions/440320/unicode-vs-str-decode-for-a-utf8-encoded-byte-string-python-2-x">http://stackoverflow.com/questions/440320/unicode-vs-str-decode-for-a-utf8-encoded-byte-string-python-2-x</a></li>
+</ol>
 
         </div>
         <div class="postmeta">
@@ -81,7 +101,7 @@
         <div class="tags">
             <span>
                 Tags:
-                <a href="tags/mencoder.html">mencoder</a>, <a href="tags/linux.html">linux</a>, <a href="tags/youtube.html">youtube</a></span>
+                <a href="tags/utf_8.html">utf-8</a>, <a href="tags/unicode.html">unicode</a>, <a href="tags/python.html">python</a></span>
         </div>
         </div><div class="archive_link">
         <a href="archive.html"> &mdash; Blog Archive &mdash; </a>
@@ -91,6 +111,8 @@
         </ul></article><aside class="sidebar"><section><div class="widget">
     <h1>Recent Posts</h1>
     <ul><li>
+            <a href="2015/12/21/postgres_array_performance.html">Postgres Array vs Join benchmark</a>
+        </li><li>
             <a href="2015/12/04/android_apps_i_use.html">Android Apps I use</a>
         </li><li>
             <a href="2015/08/01/crapbali.html">Crapbali</a>
@@ -108,8 +130,6 @@
             <a href="2011/02/04/configuring_your_ubuntu_for_faster_internet_access.html">Configuring your ubuntu for faster internet access</a>
         </li><li>
             <a href="2010/11/26/xfce_and_ubuntuone.html">xfce and ubuntuone</a>
-        </li><li>
-            <a href="2010/11/26/reliance_netconnect_broadband_on_linux.html">Reliance Netconnect Broadband+ on Linux</a>
         </li></ul>
 </div>
 </section><section><div class="widget" id="searchbox" role="search">

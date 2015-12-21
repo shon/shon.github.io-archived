@@ -5,8 +5,83 @@
         <link>http://shon.github.io/</link>
         <description>ɹ ɐ ɥ ʞ ǝ ɥ s</description>
         <language>en-us</language>
-        <pubDate>Fri, 04 Dec 2015 00:00:00 +0530</pubDate>
+        <pubDate>Mon, 21 Dec 2015 00:00:00 +0530</pubDate>
         
+        <item>
+            <link>http://shon.github.io/2015/12/21/postgres_array_performance.html</link>
+            <guid>http://shon.github.io/2015/12/21/postgres_array_performance.html</guid>
+            <title><![CDATA[Postgres Array vs Join benchmark]]></title>
+            <description><![CDATA[<h1>Postgres Array vs Join benchmark</h1>
+<p>Here is little experiment to measure postgresql array’s performance.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">peewee</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">myapp</span> <span class="kn">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">playhouse.postgres_ext</span> <span class="kn">import</span> <span class="n">ArrayField</span><span class="p">,</span> <span class="n">ForeignKeyField</span>
+
+
+<span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">database</span> <span class="o">=</span> <span class="n">db</span>
+        <span class="n">only_save_dirty</span> <span class="o">=</span> <span class="bp">True</span>
+
+
+<span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">ArrayField</span><span class="p">(</span><span class="n">CharField</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Tag</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">PostTag</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">ForeignKeyField</span><span class="p">(</span><span class="n">Post</span><span class="p">)</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">ForeignKeyField</span><span class="p">(</span><span class="n">Tag</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">no_of_posts</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="n">no_of_tags</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">setup_logging</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">PostTag</span><span class="p">,</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">Post</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">table_exists</span><span class="p">():</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">drop_table</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Tag</span><span class="p">,</span> <span class="n">Post</span><span class="p">,</span> <span class="n">PostTag</span><span class="p">):</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">create_table</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">):</span>
+        <span class="n">Tag</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'tag-</span><span class="si">%d</span><span class="s">'</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_posts</span><span class="p">):</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[(</span><span class="s">'tag-</span><span class="si">%d</span><span class="s">'</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">post</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">post</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span>
+            <span class="n">PostTag</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">post</span><span class="o">=</span><span class="n">post</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'-'</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">test_join</span><span class="p">():</span>
+    <span class="c"># =&gt; SELECT Count(post.id) FROM post INNER JOIN posttag ON (post.id = posttag.post_id) \</span>
+    <span class="c">#    WHERE (posttag.tag_id = 8);</span>
+    <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PostTag</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Tag</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s">'8'</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">test_array</span><span class="p">():</span>
+    <span class="c"># =&gt; SELECT Count("id") FROM post WHERE tags @&gt; '{tag-8}';</span>
+    <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Post</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">'tag-8'</span><span class="p">))</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Here are the numbers</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python -i bench.py
+&gt;&gt;&gt; setup<span class="o">()</span>
+<span class="nv">$ </span>python -mtimeit -s<span class="s1">'import bench'</span> <span class="s1">'bench.test_join()'</span>
+<span class="m">1000</span> loops, best of 3: <span class="m">516</span> usec per loop
+<span class="nv">$ </span>python -mtimeit -s<span class="s1">'import bench'</span> <span class="s1">'bench.test_array()'</span>
+<span class="m">1000</span> loops, best of 3: 1.32 msec per loop
+</pre></div>
+</div>
+]]></description>
+             <pubDate>Mon, 21 Dec 2015 00:00:00 +0530</pubDate>
+        </item>
+    
         <item>
             <link>http://shon.github.io/2015/12/04/android_apps_i_use.html</link>
             <guid>http://shon.github.io/2015/12/04/android_apps_i_use.html</guid>

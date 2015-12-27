@@ -82,11 +82,11 @@ Complete code
         for t in (Tag, Post, PostTag):
             t.create_table()
     
-        tags = [{'name': ('tag-%d' % i)} for i in xrange(1, no_of_tags)]
+        tags = [{'name': ('tag-%d' % i)} for i in range(1, no_of_tags)]
         Tag.insert_many(tags).execute()
     
         posts = [{'id': i, 'tags': [('tag-%d' % j) for j in random.sample(range(1, no_of_tags), tags_per_post)]}
-                 for i in xrange(1, no_of_posts)]
+                 for i in range(1, no_of_posts)]
         Post.insert_many(posts).execute()
     
         for post in tqdm(posts):

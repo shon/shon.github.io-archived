@@ -69,8 +69,39 @@
         </div>
     <div class="section" id="postgres-array-vs-join-benchmark">
 <h1>Postgres Array vs Join benchmark<a class="headerlink" href="#postgres-array-vs-join-benchmark" title="Permalink to this headline">¶</a></h1>
-<p>Here is little experiment to measure postgresql array&#8217;s performance.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">peewee</span> <span class="kn">import</span> <span class="o">*</span>
+<p>Here is little experiment to measure postgresql array&#8217;s performance. For the example problem let us take blog posts and tags.</p>
+<div class="section" id="join-approach">
+<h2>Join approach<a class="headerlink" href="#join-approach" title="Permalink to this headline">¶</a></h2>
+<p>This is perhaps more common approach to model posts and tags. So let&#8217;s define model. Here I am unsing excellent <a class="reference external" href="http://peewee.readthedocs.org">Peewee</a>. So we have three tables Post, Tag and PostTag. PostTag table maintains all post to tag records.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;example title&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Tag</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">PostTag</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">ForeignKeyField</span><span class="p">(</span><span class="n">Post</span><span class="p">)</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">ForeignKeyField</span><span class="p">(</span><span class="n">Tag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="array">
+<h2>Array<a class="headerlink" href="#array" title="Permalink to this headline">¶</a></h2>
+<p>Postgresql supports array columns. In this model array field Post.tags shall be used to maintain post-tag entries instead of PostTag model. Even <cite>Tag</cite> is not needed in this case.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;example title&#39;</span><span class="p">)</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">ArrayField</span><span class="p">(</span><span class="n">CharField</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="complete-code">
+<h2>Complete code<a class="headerlink" href="#complete-code" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">peewee</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">myapp</span> <span class="kn">import</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">playhouse.postgres_ext</span> <span class="kn">import</span> <span class="n">ArrayField</span><span class="p">,</span> <span class="n">ForeignKeyField</span>
 
@@ -82,6 +113,7 @@
 
 
 <span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">&#39;example title&#39;</span><span class="p">)</span>
     <span class="n">tags</span> <span class="o">=</span> <span class="n">ArrayField</span><span class="p">(</span><span class="n">CharField</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 
@@ -95,27 +127,33 @@
 
 
 <span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
-    <span class="n">no_of_posts</span> <span class="o">=</span> <span class="mi">1000</span>
-    <span class="n">no_of_tags</span> <span class="o">=</span> <span class="mi">100</span>
-    <span class="n">setup_logging</span><span class="p">()</span>
+    <span class="n">no_of_posts</span> <span class="o">=</span> <span class="mi">25000</span>
+    <span class="n">no_of_tags</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="n">tags_per_post</span> <span class="o">=</span> <span class="mi">15</span>
 
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">PostTag</span><span class="p">,</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">Post</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">table_exists</span><span class="p">():</span>
             <span class="n">t</span><span class="o">.</span><span class="n">drop_table</span><span class="p">()</span>
+
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Tag</span><span class="p">,</span> <span class="n">Post</span><span class="p">,</span> <span class="n">PostTag</span><span class="p">):</span>
         <span class="n">t</span><span class="o">.</span><span class="n">create_table</span><span class="p">()</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">):</span>
-        <span class="n">Tag</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;tag-</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="p">[{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;tag-</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">)]</span>
+    <span class="n">Tag</span><span class="o">.</span><span class="n">insert_many</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_posts</span><span class="p">):</span>
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;tag-</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">post</span> <span class="o">=</span> <span class="n">Post</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">post</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span>
-            <span class="n">PostTag</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">post</span><span class="o">=</span><span class="n">post</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">posts</span> <span class="o">=</span> <span class="p">[{</span><span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s">&#39;tags&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;tag-</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">),</span> <span class="n">tags_per_post</span><span class="p">)]}</span>
+             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_posts</span><span class="p">)]</span>
+    <span class="n">Post</span><span class="o">.</span><span class="n">insert_many</span><span class="p">(</span><span class="n">posts</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">post</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">posts</span><span class="p">):</span>
+        <span class="n">post_id</span> <span class="o">=</span> <span class="n">post</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span>
+        <span class="n">post_tags</span> <span class="o">=</span> <span class="p">[{</span><span class="s">&#39;post&#39;</span><span class="p">:</span> <span class="n">post_id</span><span class="p">,</span> <span class="s">&#39;tag&#39;</span><span class="p">:</span> <span class="n">tag</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]}</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">post</span><span class="p">[</span><span class="s">&#39;tags&#39;</span><span class="p">]]</span>
+        <span class="n">PostTag</span><span class="o">.</span><span class="n">insert_many</span><span class="p">(</span><span class="n">post_tags</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;Total posts: </span><span class="si">%d</span><span class="se">\n</span><span class="s">Total tags: </span><span class="si">%d</span><span class="se">\n</span><span class="s">Tags per post: </span><span class="si">%d</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">no_of_posts</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">,</span> <span class="n">tags_per_post</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">test_join</span><span class="p">():</span>
+ <span class="k">def</span> <span class="nf">test_join</span><span class="p">():</span>
     <span class="c"># =&gt; SELECT Count(post.id) FROM post INNER JOIN posttag ON (post.id = posttag.post_id) \</span>
     <span class="c">#    WHERE (posttag.tag_id = 8);</span>
     <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PostTag</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Tag</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s">&#39;8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
@@ -126,14 +164,21 @@
     <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Post</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&#39;tag-8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Here are the numbers</p>
+<p>Needless to say selecting tags for a article would be faster as we are elinimating the joins. But it would be interesting to see that how finding articles for given tag will perform.</p>
+<p>And here are the numbers on my machine (Mac Air Ubuntu 15.10 Python 2.7.9).</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python -i bench.py
 &gt;&gt;&gt; setup<span class="o">()</span>
+Total posts: 25000
+Total tags: 1000
+Tags per post: 15
+
 <span class="nv">$ </span>python -mtimeit -s<span class="s1">&#39;import bench&#39;</span> <span class="s1">&#39;bench.test_join()&#39;</span>
-<span class="m">1000</span> loops, best of 3: <span class="m">516</span> usec per loop
+<span class="m">100</span> loops, best of 3: 8.32 msec per loop
+
 <span class="nv">$ </span>python -mtimeit -s<span class="s1">&#39;import bench&#39;</span> <span class="s1">&#39;bench.test_array()&#39;</span>
-<span class="m">1000</span> loops, best of 3: 1.32 msec per loop
+<span class="m">1000</span> loops, best of 3: <span class="m">869</span> usec per loop
 </pre></div>
+</div>
 </div>
 </div>
 
@@ -145,7 +190,7 @@
         <div class="tags">
             <span>
                 Tags:
-                <a href="../../../tags/python.html">python</a>, <a href="../../../tags/postgresql.html">postgresql</a></span>
+                <a href="../../../tags/python.html">python</a>, <a href="../../../tags/postgresql.html">postgresql</a>, <a href="../../../tags/peewee.html">peewee</a></span>
         </div>
         </div><ul class="related clearfix">
             <li class="left"></li>

@@ -11,7 +11,7 @@ Here is little experiment to measure postgresql array's performance. For the exa
 
 Join approach
 --------------
-This is perhaps more common approach to model posts and tags. So let's define model. Here I am unsing excellent `Peewee <http://peewee.readthedocs.org>`_. So we have three tables Post, Tag and PostTag. PostTag table maintains all post to tag records.
+This is perhaps more common approach to model posts and tags. So let's define model. Here I am using excellent `Peewee <http://peewee.readthedocs.org>`_. So we have three tables Post, Tag and PostTag. PostTag table maintains all post to tag records.
 
 .. code-block:: python
 

@@ -15,9 +15,9 @@
 <p>Here is little experiment to measure postgresql array’s performance. For the example problem let us take blog posts and tags.</p>
 <div class="section" id="join-approach">
 <h2>Join approach</h2>
-<p>This is perhaps more common approach to model posts and tags. So let’s define model. Here I am unsing excellent <a class="reference external" href="http://peewee.readthedocs.org">Peewee</a>. So we have three tables Post, Tag and PostTag. PostTag table maintains all post to tag records.</p>
+<p>This is perhaps more common approach to model posts and tags. So let’s define model. Here I am using excellent <a class="reference external" href="http://peewee.readthedocs.org">Peewee</a>. So we have three tables Post, Tag and PostTag. PostTag table maintains all post to tag records.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">'example title'</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">'example title'</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Tag</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -34,7 +34,7 @@
 <h2>Array</h2>
 <p>Postgresql supports array columns. In this model array field Post.tags shall be used to maintain post-tag entries instead of PostTag model. Even <cite>Tag</cite> is not needed in this case.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">'example title'</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">'example title'</span><span class="p">)</span>
     <span class="n">tags</span> <span class="o">=</span> <span class="n">ArrayField</span><span class="p">(</span><span class="n">CharField</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -56,7 +56,7 @@
 
 
 <span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s">'example title'</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">CharField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">'example title'</span><span class="p">)</span>
     <span class="n">tags</span> <span class="o">=</span> <span class="n">ArrayField</span><span class="p">(</span><span class="n">CharField</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 
@@ -81,44 +81,44 @@
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Tag</span><span class="p">,</span> <span class="n">Post</span><span class="p">,</span> <span class="n">PostTag</span><span class="p">):</span>
         <span class="n">t</span><span class="o">.</span><span class="n">create_table</span><span class="p">()</span>
 
-    <span class="n">tags</span> <span class="o">=</span> <span class="p">[{</span><span class="s">'name'</span><span class="p">:</span> <span class="p">(</span><span class="s">'tag-</span><span class="si">%d</span><span class="s">'</span> <span class="o">%</span> <span class="n">i</span><span class="p">)}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">)]</span>
+    <span class="n">tags</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">'name'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'tag-</span><span class="si">%d</span><span class="s1">'</span> <span class="o">%</span> <span class="n">i</span><span class="p">)}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">)]</span>
     <span class="n">Tag</span><span class="o">.</span><span class="n">insert_many</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
 
-    <span class="n">posts</span> <span class="o">=</span> <span class="p">[{</span><span class="s">'id'</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s">'tags'</span><span class="p">:</span> <span class="p">[(</span><span class="s">'tag-</span><span class="si">%d</span><span class="s">'</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">),</span> <span class="n">tags_per_post</span><span class="p">)]}</span>
+    <span class="n">posts</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">'id'</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[(</span><span class="s1">'tag-</span><span class="si">%d</span><span class="s1">'</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">),</span> <span class="n">tags_per_post</span><span class="p">)]}</span>
              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">no_of_posts</span><span class="p">)]</span>
     <span class="n">Post</span><span class="o">.</span><span class="n">insert_many</span><span class="p">(</span><span class="n">posts</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">post</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">posts</span><span class="p">):</span>
-        <span class="n">post_id</span> <span class="o">=</span> <span class="n">post</span><span class="p">[</span><span class="s">'id'</span><span class="p">]</span>
-        <span class="n">post_tags</span> <span class="o">=</span> <span class="p">[{</span><span class="s">'post'</span><span class="p">:</span> <span class="n">post_id</span><span class="p">,</span> <span class="s">'tag'</span><span class="p">:</span> <span class="n">tag</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'-'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]}</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">post</span><span class="p">[</span><span class="s">'tags'</span><span class="p">]]</span>
+        <span class="n">post_id</span> <span class="o">=</span> <span class="n">post</span><span class="p">[</span><span class="s1">'id'</span><span class="p">]</span>
+        <span class="n">post_tags</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">'post'</span><span class="p">:</span> <span class="n">post_id</span><span class="p">,</span> <span class="s1">'tag'</span><span class="p">:</span> <span class="n">tag</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'-'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]}</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">post</span><span class="p">[</span><span class="s1">'tags'</span><span class="p">]]</span>
         <span class="n">PostTag</span><span class="o">.</span><span class="n">insert_many</span><span class="p">(</span><span class="n">post_tags</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="s">'Total posts: </span><span class="si">%d</span><span class="se">\n</span><span class="s">Total tags: </span><span class="si">%d</span><span class="se">\n</span><span class="s">Tags per post: </span><span class="si">%d</span><span class="se">\n</span><span class="s">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">no_of_posts</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">,</span> <span class="n">tags_per_post</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'Total posts: </span><span class="si">%d</span><span class="se">\n</span><span class="s1">Total tags: </span><span class="si">%d</span><span class="se">\n</span><span class="s1">Tags per post: </span><span class="si">%d</span><span class="se">\n</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">no_of_posts</span><span class="p">,</span> <span class="n">no_of_tags</span><span class="p">,</span> <span class="n">tags_per_post</span><span class="p">))</span>
 
 
  <span class="k">def</span> <span class="nf">test_join</span><span class="p">():</span>
-    <span class="c"># =&gt; SELECT Count(post.id) FROM post INNER JOIN posttag ON (post.id = posttag.post_id) \</span>
-    <span class="c">#    WHERE (posttag.tag_id = 8);</span>
-    <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PostTag</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Tag</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s">'8'</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="c1"># =&gt; SELECT Count(post.id) FROM post INNER JOIN posttag ON (post.id = posttag.post_id) \</span>
+    <span class="c1">#    WHERE (posttag.tag_id = 8);</span>
+    <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PostTag</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Tag</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Tag</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s1">'8'</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">test_array</span><span class="p">():</span>
-    <span class="c"># =&gt; SELECT Count("id") FROM post WHERE tags @&gt; '{tag-8}';</span>
-    <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Post</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s">'tag-8'</span><span class="p">))</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="c1"># =&gt; SELECT Count("id") FROM post WHERE tags @&gt; '{tag-8}';</span>
+    <span class="k">return</span> <span class="n">Post</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Post</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">'tag-8'</span><span class="p">))</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Needless to say selecting tags for a article would be faster as we are elinimating the joins. But it would be interesting to see that how finding articles for given tag will perform.</p>
 <p>And here are the numbers on my machine (Mac Air Ubuntu 15.10 Python 2.7.9).</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python -i bench.py
+<div class="highlight-bash"><div class="highlight"><pre>$ python -i bench.py
 &gt;&gt;&gt; setup<span class="o">()</span>
 Total posts: 25000
 Total tags: 1000
 Tags per post: 15
 
-<span class="nv">$ </span>python -mtimeit -s<span class="s1">'import bench'</span> <span class="s1">'bench.test_join()'</span>
+$ python -mtimeit -s<span class="s1">'import bench'</span> <span class="s1">'bench.test_join()'</span>
 <span class="m">100</span> loops, best of 3: 8.32 msec per loop
 
-<span class="nv">$ </span>python -mtimeit -s<span class="s1">'import bench'</span> <span class="s1">'bench.test_array()'</span>
+$ python -mtimeit -s<span class="s1">'import bench'</span> <span class="s1">'bench.test_array()'</span>
 <span class="m">1000</span> loops, best of 3: <span class="m">869</span> usec per loop
 </pre></div>
 </div>
@@ -321,19 +321,19 @@ dns_compare -z example.com --file example.com.zone \
             <title><![CDATA[UI Testing and BDD]]></title>
             <description><![CDATA[<h1>UI Testing and BDD</h1>
 <p>Recently I had an opportunity to automate UI testing of the web application we have developed. So I found this excellent UI testing framework <a class="reference external" href="http://splinter.cobrateam.info/">Splinter</a>. It being written in Python I was instantly confortable.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># From Splinter's website</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c1"># From Splinter's website</span>
 <span class="kn">from</span> <span class="nn">splinter</span> <span class="kn">import</span> <span class="n">Browser</span>
 
  <span class="k">with</span> <span class="n">Browser</span><span class="p">()</span> <span class="k">as</span> <span class="n">browser</span><span class="p">:</span>
-     <span class="n">url</span> <span class="o">=</span> <span class="s">"http://www.google.com"</span>
+     <span class="n">url</span> <span class="o">=</span> <span class="s2">"http://www.google.com"</span>
      <span class="n">browser</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-     <span class="n">browser</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s">'q'</span><span class="p">,</span> <span class="s">'splinter python acceptance testing'</span><span class="p">)</span>
-     <span class="n">button</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="s">'btnG'</span><span class="p">)</span>
+     <span class="n">browser</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">'q'</span><span class="p">,</span> <span class="s1">'splinter python acceptance testing'</span><span class="p">)</span>
+     <span class="n">button</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="s1">'btnG'</span><span class="p">)</span>
      <span class="n">button</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
-     <span class="k">if</span> <span class="n">browser</span><span class="o">.</span><span class="n">is_text_present</span><span class="p">(</span><span class="s">'splinter.cobrateam.info'</span><span class="p">):</span>
-         <span class="k">print</span> <span class="s">"Yes, the official website was found!"</span>
+     <span class="k">if</span> <span class="n">browser</span><span class="o">.</span><span class="n">is_text_present</span><span class="p">(</span><span class="s1">'splinter.cobrateam.info'</span><span class="p">):</span>
+         <span class="k">print</span> <span class="s2">"Yes, the official website was found!"</span>
      <span class="k">else</span><span class="p">:</span>
-         <span class="k">print</span> <span class="s">"No, it wasn't found... We need to improve"</span>
+         <span class="k">print</span> <span class="s2">"No, it wasn't found... We need to improve"</span>
 </pre></div>
 </div>
 <p>Ah well sweet. It supports multiple webdrivers including remote. So it’s possible to integrate it with <a class="reference external" href="http://saucelabs.com">saucelabs</a> which makes it possible to test on web browsers which are not on your dev box.</p>
@@ -444,7 +444,7 @@ Like described at <a class="reference external" href="http://sahyakada.blogspot.
 <div class="section" id="authentication-using-special-parameters-in-rpc-call">
 <h4>Authentication | Using special parameters in rpc call</h4>
 <p>Session id is passed as special parameter in every rpc call. For eg. above add function may be invoked like below</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">_session</span><span class="o">=</span><span class="s">'somesessionid'</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">_session</span><span class="o">=</span><span class="s1">'somesessionid'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -503,15 +503,15 @@ agility’s development would love to find an excuse to use it.</p>
             <title><![CDATA[Configuring your ubuntu for faster internet access]]></title>
             <description><![CDATA[<h1>Configuring your ubuntu for faster internet access</h1>
 <p>While there is a lot already written here my quick howto</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo bash
-<span class="c"># apt-get install dnsmasq squid</span>
-<span class="c"># echo "listen-address=127.0.0.1" &gt;&gt; /etc/dnsmasq.conf</span>
-<span class="c"># echo "no-dhcp-interface=" &gt;&gt; /etc/dnsmasq.conf</span>
-<span class="c"># vi /etc/dhcp3/dhclient.conf</span>
-<span class="c"># # ^ uncomment line #prepend domain-name-servers 127.0.0.1;</span>
-<span class="c"># vi /etc/resolv.conf  # Add nameserver 127.0.0.1</span>
-<span class="c"># /etc/init.d/dnsmasq restart</span>
-<span class="c"># vi /etc/squid/squid.conf</span>
+<div class="highlight-bash"><div class="highlight"><pre>$ sudo bash
+<span class="c1"># apt-get install dnsmasq squid</span>
+<span class="c1"># echo "listen-address=127.0.0.1" &gt;&gt; /etc/dnsmasq.conf</span>
+<span class="c1"># echo "no-dhcp-interface=" &gt;&gt; /etc/dnsmasq.conf</span>
+<span class="c1"># vi /etc/dhcp3/dhclient.conf</span>
+<span class="c1"># # ^ uncomment line #prepend domain-name-servers 127.0.0.1;</span>
+<span class="c1"># vi /etc/resolv.conf  # Add nameserver 127.0.0.1</span>
+<span class="c1"># /etc/init.d/dnsmasq restart</span>
+<span class="c1"># vi /etc/squid/squid.conf</span>
 
 http_port 3128
 visible_hostname localhost
@@ -534,10 +534,10 @@ cache_dir ufs /cache <span class="m">400</span> <span class="m">16</span> 256
 cache_store_log none
 
 
-<span class="c"># mkdir /cache # I have this dir on reizerfs partition</span>
-<span class="c"># chown proxy.proxy /cache</span>
+<span class="c1"># mkdir /cache # I have this dir on reizerfs partition</span>
+<span class="c1"># chown proxy.proxy /cache</span>
 
-<span class="c"># /etc/init.d/squid restart</span>
+<span class="c1"># /etc/init.d/squid restart</span>
 </pre></div>
 </div>
 <p>Configure your browser to use 127.0.0.1:8080.
@@ -614,19 +614,19 @@ and helps us in finding the matching words.</p>
 <p>So for above four string if we find strings that has score that is =&gt;
 0.097 and &lt; 0.098, we find all strings that begins with ‘a’</p>
 <p>Code</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># Search usernames that begins with given phrase</span>
-<span class="c">#</span>
-<span class="c"># usernames: (username1, username2, ..)</span>
-<span class="c"># userscore:&lt;username&gt;: float</span>
-<span class="c"># user:obj: { id: int, username: string }</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c1"># Search usernames that begins with given phrase</span>
+<span class="c1">#</span>
+<span class="c1"># usernames: (username1, username2, ..)</span>
+<span class="c1"># userscore:&lt;username&gt;: float</span>
+<span class="c1"># user:obj: { id: int, username: string }</span>
 
-<span class="n">usernames_zset</span> <span class="o">=</span> <span class="s">"usernames"</span>
+<span class="n">usernames_zset</span> <span class="o">=</span> <span class="s2">"usernames"</span>
 
 <span class="k">def</span> <span class="nf">my_ord</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s">"</span><span class="si">%03d</span><span class="s">"</span> <span class="o">%</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">"</span><span class="si">%03d</span><span class="s2">"</span> <span class="o">%</span> <span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">get_score</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s">'0.'</span> <span class="o">+</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">my_ord</span><span class="p">,</span><span class="n">s</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="s1">'0.'</span> <span class="o">+</span> <span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">my_ord</span><span class="p">,</span><span class="n">s</span><span class="p">)))</span>
 
 <span class="k">def</span> <span class="nf">get_next_score</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
     <span class="n">s_score</span> <span class="o">=</span> <span class="n">get_score</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
@@ -637,15 +637,15 @@ and helps us in finding the matching words.</p>
     <span class="k">return</span> <span class="n">part0</span> <span class="o">+</span> <span class="n">next_c</span> <span class="o">+</span> <span class="n">part1</span>
 
 <span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">score</span><span class="p">):</span>
-    <span class="c"># The User Object</span>
-    <span class="n">uid</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">incr</span><span class="p">(</span><span class="s">'user:idgen'</span><span class="p">)</span>
-    <span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s">'user:obj:</span><span class="si">%d</span><span class="s">'</span> <span class="o">%</span> <span class="n">uid</span><span class="p">,</span> <span class="s">'id'</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
-    <span class="c"># datastructures necessary to implement search</span>
+    <span class="c1"># The User Object</span>
+    <span class="n">uid</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">incr</span><span class="p">(</span><span class="s1">'user:idgen'</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">hset</span><span class="p">(</span><span class="s1">'user:obj:</span><span class="si">%d</span><span class="s1">'</span> <span class="o">%</span> <span class="n">uid</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+    <span class="c1"># datastructures necessary to implement search</span>
     <span class="n">conn</span><span class="o">.</span><span class="n">zadd</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">add_test_data</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
-    <span class="n">test_data</span> <span class="o">=</span> <span class="p">(</span><span class="s">'abc'</span><span class="p">,</span> <span class="s">'ab'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">,</span> <span class="s">'shekhar'</span><span class="p">,</span> <span class="s">'shon'</span><span class="p">,</span> <span class="s">'sh'</span><span class="p">,</span> \
-        <span class="s">'zxcvbnmasdfghjklqwertyuiop0'</span><span class="p">,</span> <span class="s">'zxcvbnmasdfghjklqwertyuiop00'</span><span class="p">)</span>
+    <span class="n">test_data</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'abc'</span><span class="p">,</span> <span class="s1">'ab'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span> <span class="s1">'shekhar'</span><span class="p">,</span> <span class="s1">'shon'</span><span class="p">,</span> <span class="s1">'sh'</span><span class="p">,</span> \
+        <span class="s1">'zxcvbnmasdfghjklqwertyuiop0'</span><span class="p">,</span> <span class="s1">'zxcvbnmasdfghjklqwertyuiop00'</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">username</span> <span class="ow">in</span> <span class="n">test_data</span><span class="p">:</span>
         <span class="n">score</span> <span class="o">=</span> <span class="n">get_score</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
@@ -656,16 +656,16 @@ and helps us in finding the matching words.</p>
 
 <span class="n">add_test_data</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
 
-<span class="c"># conn.zrange(usernames_zset, 0, -1) # Whole set</span>
-<span class="n">a_score</span> <span class="o">=</span> <span class="n">get_score</span><span class="p">(</span><span class="s">'a'</span><span class="p">)</span>
-<span class="n">b_score</span> <span class="o">=</span> <span class="n">get_next_score</span><span class="p">(</span><span class="s">'a'</span><span class="p">)</span>
+<span class="c1"># conn.zrange(usernames_zset, 0, -1) # Whole set</span>
+<span class="n">a_score</span> <span class="o">=</span> <span class="n">get_score</span><span class="p">(</span><span class="s1">'a'</span><span class="p">)</span>
+<span class="n">b_score</span> <span class="o">=</span> <span class="n">get_next_score</span><span class="p">(</span><span class="s1">'a'</span><span class="p">)</span>
 
-<span class="k">print</span> <span class="s">'Find all users starting with "a" -&gt; INF'</span>
-<span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">zrangebyscore</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">a_score</span><span class="p">,</span> <span class="s">'INF'</span><span class="p">)</span>
-<span class="k">print</span> <span class="s">'Find all users starting with "a"'</span>
+<span class="k">print</span> <span class="s1">'Find all users starting with "a" -&gt; INF'</span>
+<span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">zrangebyscore</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">a_score</span><span class="p">,</span> <span class="s1">'INF'</span><span class="p">)</span>
+<span class="k">print</span> <span class="s1">'Find all users starting with "a"'</span>
 <span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">zrangebyscore</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">a_score</span><span class="p">,</span> <span class="n">b_score</span><span class="p">)</span>
-<span class="k">print</span> <span class="s">'Find all users starting with "a" limit 2'</span>
-<span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">zrangebyscore</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">a_score</span><span class="p">,</span> <span class="s">'INF'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span> <span class="s1">'Find all users starting with "a" limit 2'</span>
+<span class="k">print</span> <span class="n">conn</span><span class="o">.</span><span class="n">zrangebyscore</span><span class="p">(</span><span class="n">usernames_zset</span><span class="p">,</span> <span class="n">a_score</span><span class="p">,</span> <span class="s1">'INF'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -842,7 +842,7 @@ more cautious hiring him.</p>
             <title><![CDATA[Using DOT language to produce Flowchart]]></title>
             <description><![CDATA[<h1>Using DOT language to produce Flowchart</h1>
 <p>better than struggling with the graphical tools.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>cat test.dot
+<div class="highlight-bash"><div class="highlight"><pre>$ cat test.dot
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre>digraph FlowChart {
@@ -877,7 +877,7 @@ which_browser -&gt; bye [label="what firefox?"]
 </pre></div>
 </div>
 <p>Here is the result.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>dot test.dot -Tpng -o test.png <span class="o">&amp;&amp;</span> eog test.png
+<div class="highlight-bash"><div class="highlight"><pre>$ dot test.dot -Tpng -o test.png <span class="o">&amp;&amp;</span> eog test.png
 </pre></div>
 </div>
 <img alt="../../../_images/002.png" src="http://shon.github.io/_images/002.png"/>
@@ -930,9 +930,9 @@ others. Or there are more hyped languages exist.</p>
 <span class="k">for</span> <span class="n">cls</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Test</span><span class="p">,</span> <span class="n">Test2</span><span class="p">,</span> <span class="n">Test3</span><span class="p">):</span>
    <span class="k">try</span><span class="p">:</span>
        <span class="k">if</span> <span class="n">zope</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">verify</span><span class="o">.</span><span class="n">verifyClass</span><span class="p">(</span><span class="n">ITest</span><span class="p">,</span> <span class="n">cls</span><span class="p">):</span>
-           <span class="k">print</span> <span class="s">"OK: </span><span class="si">%s</span><span class="s"> correctly implements </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">ITest</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+           <span class="k">print</span> <span class="s2">"OK: </span><span class="si">%s</span><span class="s2"> correctly implements </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">ITest</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
    <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span>
-       <span class="k">print</span> <span class="s">"Error detected with </span><span class="si">%s</span><span class="s">'s implementation: </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+       <span class="k">print</span> <span class="s2">"Error detected with </span><span class="si">%s</span><span class="s2">'s implementation: </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
 </pre></div>
 </div>
 ]]></description>

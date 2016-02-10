@@ -70,7 +70,7 @@
     <div class="section" id="using-dot-language-to-produce-flowchart">
 <h1>Using DOT language to produce Flowchart<a class="headerlink" href="#using-dot-language-to-produce-flowchart" title="Permalink to this headline">¶</a></h1>
 <p>better than struggling with the graphical tools.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>cat test.dot
+<div class="highlight-bash"><div class="highlight"><pre>$ cat test.dot
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre>digraph FlowChart {
@@ -105,7 +105,7 @@ which_browser -&gt; bye [label=&quot;what firefox?&quot;]
 </pre></div>
 </div>
 <p>Here is the result.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>dot test.dot -Tpng -o test.png <span class="o">&amp;&amp;</span> eog test.png
+<div class="highlight-bash"><div class="highlight"><pre>$ dot test.dot -Tpng -o test.png <span class="o">&amp;&amp;</span> eog test.png
 </pre></div>
 </div>
 <img alt="../../../_images/002.png" src="../../../_images/002.png" />

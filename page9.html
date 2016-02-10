@@ -70,15 +70,15 @@
         <div class="section">
             <h1><a href="2011/02/04/configuring_your_ubuntu_for_faster_internet_access.html">Configuring your ubuntu for faster internet access<a class="headerlink" href="#configuring-your-ubuntu-for-faster-internet-access" title="Permalink to this headline">¶</a></a></h1>
 <p>While there is a lot already written here my quick howto</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>sudo bash
-<span class="c"># apt-get install dnsmasq squid</span>
-<span class="c"># echo "listen-address=127.0.0.1" &gt;&gt; /etc/dnsmasq.conf</span>
-<span class="c"># echo "no-dhcp-interface=" &gt;&gt; /etc/dnsmasq.conf</span>
-<span class="c"># vi /etc/dhcp3/dhclient.conf</span>
-<span class="c"># # ^ uncomment line #prepend domain-name-servers 127.0.0.1;</span>
-<span class="c"># vi /etc/resolv.conf  # Add nameserver 127.0.0.1</span>
-<span class="c"># /etc/init.d/dnsmasq restart</span>
-<span class="c"># vi /etc/squid/squid.conf</span>
+<div class="highlight-bash"><div class="highlight"><pre>$ sudo bash
+<span class="c1"># apt-get install dnsmasq squid</span>
+<span class="c1"># echo "listen-address=127.0.0.1" &gt;&gt; /etc/dnsmasq.conf</span>
+<span class="c1"># echo "no-dhcp-interface=" &gt;&gt; /etc/dnsmasq.conf</span>
+<span class="c1"># vi /etc/dhcp3/dhclient.conf</span>
+<span class="c1"># # ^ uncomment line #prepend domain-name-servers 127.0.0.1;</span>
+<span class="c1"># vi /etc/resolv.conf  # Add nameserver 127.0.0.1</span>
+<span class="c1"># /etc/init.d/dnsmasq restart</span>
+<span class="c1"># vi /etc/squid/squid.conf</span>
 
 http_port 3128
 visible_hostname localhost
@@ -101,10 +101,10 @@ cache_dir ufs /cache <span class="m">400</span> <span class="m">16</span> 256
 cache_store_log none
 
 
-<span class="c"># mkdir /cache # I have this dir on reizerfs partition</span>
-<span class="c"># chown proxy.proxy /cache</span>
+<span class="c1"># mkdir /cache # I have this dir on reizerfs partition</span>
+<span class="c1"># chown proxy.proxy /cache</span>
 
-<span class="c"># /etc/init.d/squid restart</span>
+<span class="c1"># /etc/init.d/squid restart</span>
 </pre></div>
 </div>
 <p>Configure your browser to use 127.0.0.1:8080.

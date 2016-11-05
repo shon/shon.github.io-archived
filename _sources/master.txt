@@ -25,6 +25,5 @@ Sitemap
    2009/02/16/qemu_networking_setup
    2008/12/09/using_dot_language_to_produce_flowchart
    2008/04/17/getting_older_getting_better_and_better
-   2008/04/17/contract_verification_in_python
    pages/about
-
+   2008/04/17/contract_verification_in_python

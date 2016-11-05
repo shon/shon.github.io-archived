@@ -1,8 +1,6 @@
 About
 =====
 
-Web page: `<http://flavors.me/shon>`_
-
-Projects: `<2009/02/my-open-source-projects.html>`_
+Web page: `<http://shon.flavors.me/>`_
 
 Contact: pythonic at gmail dot com
